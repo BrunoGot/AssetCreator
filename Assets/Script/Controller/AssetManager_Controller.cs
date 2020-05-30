@@ -19,6 +19,7 @@ public class AssetManagerController
 
     }
 
+    //trigged when click on load asset button
     private void LoadAsset(object _sender, LoadAssetsArgs _args)
     {
         string parentFolder = Path.GetDirectoryName(_args.Path);

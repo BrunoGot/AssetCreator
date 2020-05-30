@@ -19,8 +19,6 @@ public class AssetManager_View : MonoBehaviour, IAssetManagerView
 		FileBrowser.SetExcludedExtensions(".lnk", ".tmp", ".zip", ".rar", ".exe");
 		FileBrowser.AddQuickLink("Users", "C:\\Users", null);
 
-		
-
 	}
 
 	public void InitPipelineButtons(Dictionary<TaskName, ITasksController> _tasks)

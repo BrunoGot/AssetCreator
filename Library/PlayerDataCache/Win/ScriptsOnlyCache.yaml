@@ -25,9 +25,11 @@ ScriptsOnlyBuild:
     - UnityEngine.UI.CanvasScaler
     - UnityEngine.UI.Dropdown
     - UnityEngine.UI.GraphicRaycaster
+    - UnityEngine.UI.GridLayoutGroup
     - UnityEngine.UI.Image
     - UnityEngine.UI.InputField
     - UnityEngine.UI.Mask
+    - UnityEngine.UI.RawImage
     - UnityEngine.UI.RectMask2D
     - UnityEngine.UI.ScrollRect
     - UnityEngine.UI.Scrollbar
@@ -56,51 +58,55 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 11154}
     - Class: 114
-      Script: {instanceID: 11238}
+      Script: {instanceID: 11242}
     - Class: 114
-      Script: {instanceID: 11316}
+      Script: {instanceID: 11320}
     - Class: 114
-      Script: {instanceID: 11318}
+      Script: {instanceID: 11322}
     - Class: 114
-      Script: {instanceID: 11356}
+      Script: {instanceID: 11360}
     - Class: 114
-      Script: {instanceID: 11432}
+      Script: {instanceID: 11412}
     - Class: 114
-      Script: {instanceID: 11554}
+      Script: {instanceID: 11438}
     - Class: 114
-      Script: {instanceID: 11652}
+      Script: {instanceID: 11562}
     - Class: 114
-      Script: {instanceID: 11686}
+      Script: {instanceID: 11660}
     - Class: 114
-      Script: {instanceID: 11720}
+      Script: {instanceID: 11696}
     - Class: 114
-      Script: {instanceID: 11744}
+      Script: {instanceID: 11730}
     - Class: 114
-      Script: {instanceID: 11938}
+      Script: {instanceID: 11754}
     - Class: 114
-      Script: {instanceID: 12134}
+      Script: {instanceID: 11948}
     - Class: 114
-      Script: {instanceID: 12242}
+      Script: {instanceID: 12144}
     - Class: 114
-      Script: {instanceID: 12330}
+      Script: {instanceID: 12168}
     - Class: 114
-      Script: {instanceID: 12434}
+      Script: {instanceID: 12252}
     - Class: 114
-      Script: {instanceID: 12526}
+      Script: {instanceID: 12340}
     - Class: 114
-      Script: {instanceID: 12628}
+      Script: {instanceID: 12444}
     - Class: 114
-      Script: {instanceID: 12910}
+      Script: {instanceID: 12536}
     - Class: 114
-      Script: {instanceID: 12932}
+      Script: {instanceID: 12638}
+    - Class: 114
+      Script: {instanceID: 12922}
     - Class: 114
       Script: {instanceID: 12944}
     - Class: 114
-      Script: {instanceID: 12970}
+      Script: {instanceID: 12956}
     - Class: 114
       Script: {instanceID: 12982}
     - Class: 114
-      Script: {instanceID: 12996}
+      Script: {instanceID: 12994}
+    - Class: 114
+      Script: {instanceID: 13008}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -130,6 +136,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
     className: TMP_SelectionCaret
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: FileReader
   - hash:
       serializedVersion: 2
       Hash: 87ff43d2baf3385cba327d8f803a4ebb
@@ -216,6 +228,12 @@ ScriptsOnlyBuild:
     className: GridLayoutGroup
   - hash:
       serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Concept_View
+  - hash:
+      serializedVersion: 2
       Hash: d2041ae5f58b8406057e93412867762c
     assemblyName: Assembly-CSharp-firstpass.dll
     namespaceName: SimpleFileBrowser
@@ -244,6 +262,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.EventSystems
     className: PhysicsRaycaster
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: PanelBoard_View
   - hash:
       serializedVersion: 2
       Hash: bd3cf68c8964d3c66d1c43f4f98508c9
@@ -595,4 +619,4 @@ ScriptsOnlyBuild:
   platform: 5
   scenePathNames:
   - Assets/Scenes/SampleScene.unity
-  playerPath: C:/Users/Natspir/Documents/Code/Unity/AssetCreator/Build/V2/AssetCreator.exe
+  playerPath: C:/Users/Natspir/Documents/Code/Unity/AssetCreator/Build/V3/AssetCreator.exe
