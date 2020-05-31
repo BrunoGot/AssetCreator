@@ -52,7 +52,7 @@ public class AssetManagerModel
     private void ParseTasks(string _path)
     {
 
-        InitPipelineTasks();//reinitialise the tasks of the asset
+        //InitPipelineTasks()=> desactivé pour l'instnat, provoque une erreur lorsqu'on charge un projet, prevoir une fonction de reinitialisation pour chaque mode ? ;//reinitialise the tasks of the asset
         _path +="/3d/scenes/";
         Debug.Log(Directory.GetDirectories(_path).Length);
         string[] pathsDir = Directory.GetDirectories(_path);

@@ -16,16 +16,28 @@ public class Concept_View : MonoBehaviour, IConcept_View
 
     //parameter
     private Button m_newConcept; //buffer used to save the id of the last button created
+    //gui
+    private Button m_quitPanel; //Button to quit the concept mode
 
     PanelBoard_Controller m_panelBoard; //this module is a gui module so its linked directly to the view part. It's an independant module that can be used in other application
     // Start is called before the first frame update
+    
+    void Awake()
+    {
+        InitGUI();
+    }
     void Start()
     {
         m_panelBoard = new PanelBoard_Controller();
         m_panelBoard.addPanelEvent += HandleNewConcept;
         m_panelBoard.onMainButtonEvent += HandleSelectConcept;
         gameObject.SetActive(false);
+    }
 
+    void InitGUI()
+    {
+        m_quitPanel = GameObject.Find("QuitButton").GetComponent<Button>();
+        m_quitPanel.onClick.AddListener(QuitPanelMode);
     }
 
     // Update is called once per frame
@@ -79,4 +91,8 @@ public class Concept_View : MonoBehaviour, IConcept_View
         selectConceptEvent(this, _eventArgs); //get signal from the panelBoard module and give it to the controller to handle actions
     }
 
+    private void QuitPanelMode()
+    {
+        gameObject.SetActive(false);
+    }
 }
