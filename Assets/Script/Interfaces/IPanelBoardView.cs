@@ -28,4 +28,5 @@ public interface IPanelBoardView
 
     // void MainButtonHandler(int _idButton); pas besoin en public finalement
     void PlayButtonHandler();
+    void RemovePanel(GameObject _panel); //delete a panel from the view
 }

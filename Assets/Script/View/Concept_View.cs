@@ -5,6 +5,7 @@ using System.Dynamic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
+using System.IO;
 
 //manage the concept panel gui
 public class Concept_View : MonoBehaviour, IConcept_View
@@ -62,7 +63,14 @@ public class Concept_View : MonoBehaviour, IConcept_View
     private void FilePathHandler(string _path)
     {
         Debug.Log("test delegate : path = " + _path);
-        StartCoroutine(GetTextureFromPath(_path));
+        if (_path != null && (_path.Contains(".png")|| _path.Contains(".jpg")|| _path.Contains(".jpeg")))
+        {
+            StartCoroutine(GetTextureFromPath(_path));
+        }
+        else
+        {   //if an error occur, remove the last panel created
+            m_panelBoard.RemovePanel(m_newConcept.transform.parent.gameObject);
+        }
     }
 
     private IEnumerator GetTextureFromPath(string _path)
@@ -72,6 +80,7 @@ public class Concept_View : MonoBehaviour, IConcept_View
         if(www.isNetworkError || www.isHttpError)
         {
             Debug.Log(www.error);
+            m_panelBoard.RemovePanel(m_newConcept.transform.parent.gameObject);
         }
         else
         {

@@ -2,11 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * TODO for saving : 
+ * Save the Concept by storing the imgPath and the index of the associated panel in a strucutre like dictionary or serialize it.
+ * Get the signal from the panelboard module for each panle loaded with their index.
+ * Get the index from this signal, use it to found the associated img path, stored in a dictionary (index, imgPath). 
+ * Recreate or reload the concept art from these information
+ * 
+ */
 public class ConceptTask : TaskController
 {
     //  private ConceptTaskView m_view;
     IConcept_View m_view;
-
+    
     //concept list assigned to their ID button
     Dictionary<int, string> m_concepts; //idbutton linked to the img path of the concept
 
