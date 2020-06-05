@@ -5,9 +5,13 @@ using System;
 
 public interface IAssetManagerView
 {
+    //events
     event EventHandler<LoadAssetsArgs> loadAssetEvent;
+    event EventHandler<SaveAssetsArgs> saveAssetEvent; //trigged when clicked on save button
+
     void UpdateTaskButton(TaskName _name, TaskState _state, string _warningMessage);
     void InitPipelineButtons(Dictionary<TaskName, ITasksController> _tasks);
+    void IsAssetLoaded(bool val); //update view mode for when an asset is loaded in the system or not
 }
 
 public class LoadAssetsArgs : EventArgs
@@ -24,4 +28,11 @@ public class LoadAssetsArgs : EventArgs
         set { m_path = value; }
     }
 
+}
+
+public class SaveAssetsArgs : EventArgs
+{
+    public SaveAssetsArgs()
+    {
+    }
 }

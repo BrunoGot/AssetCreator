@@ -15,6 +15,11 @@ public class PanelBoard_View : MonoBehaviour, IPanelBoardView
     // Start is called before the first frame update
     void Start()
     {
+       
+    }
+
+    public void Init() //used to init manually beofre the "start" of a unityscript
+    {
         transform.Find("AddPanelButton").GetComponent<Button>().onClick.AddListener(AddButtonHandler);
         m_buttonPanel = Resources.Load<GameObject>("GUI/ButtonPanelTemplate") as GameObject;
         m_panels = new List<GameObject>(); //just the list containing the created buttons
@@ -26,13 +31,17 @@ public class PanelBoard_View : MonoBehaviour, IPanelBoardView
         
     }
 
-    public void AddButtonHandler() //add a new panelon cliced
+    public GameObject CreatePanel()
     {
-        GameObject button = Instantiate(m_buttonPanel,this.transform);
+        GameObject button = Instantiate(m_buttonPanel, this.transform);
         m_panels.Add(button);
         GameObject mainButton = button.transform.Find("MainButton").gameObject;
         mainButton.GetComponent<Button>().onClick.AddListener(() => MainButtonHandler(mainButton.GetInstanceID()));
-        addPanelEvent(this, new AddPanelEvent(mainButton));//spread signal that a new panel has been added to initialise it in the application part if needed
+        return mainButton;
+    }
+    public void AddButtonHandler() //add a new panelon cliced
+    {
+        addPanelEvent(this, new AddPanelEvent(CreatePanel()));//spread signal that a new panel has been added to initialise it in the application part if needed
     }
 
     public void PlayButtonHandler()

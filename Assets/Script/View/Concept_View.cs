@@ -32,7 +32,7 @@ public class Concept_View : MonoBehaviour, IConcept_View
         m_panelBoard = new PanelBoard_Controller();
         m_panelBoard.addPanelEvent += HandleNewConcept;
         m_panelBoard.onMainButtonEvent += HandleSelectConcept;
-        gameObject.SetActive(false);
+        DisplayPanel(false);
     }
 
     void InitGUI()
@@ -49,7 +49,10 @@ public class Concept_View : MonoBehaviour, IConcept_View
 
     public void DisplayPanel(bool _val) //show or hide the concept panel
     {
-        gameObject.SetActive(_val);
+        CanvasGroup cg = gameObject.GetComponent<CanvasGroup>();
+        cg.alpha = _val?1:0;
+        cg.interactable = _val;
+        cg.blocksRaycasts = _val;
     }
 
     private void HandleNewConcept(object _sender, AddPanelEvent _args)
@@ -104,4 +107,21 @@ public class Concept_View : MonoBehaviour, IConcept_View
     {
         gameObject.SetActive(false);
     }
+
+    public void LoadConcepts(string[] _imgs)
+    {
+        StartCoroutine(LoadMultipleTexture(_imgs));
+        
+    }
+
+    public IEnumerator LoadMultipleTexture(string[] _imgs)
+    {
+        foreach (string img in _imgs)
+        {
+            m_newConcept = m_panelBoard.CreateNewPanel().GetComponent<Button>();
+            FilePathHandler(img);
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
+
 }

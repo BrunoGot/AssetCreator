@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class AssetManager_View : MonoBehaviour, IAssetManagerView
 {
 	public event EventHandler<LoadAssetsArgs> loadAssetEvent;
+	public event EventHandler<SaveAssetsArgs> saveAssetEvent;
 	// Start is called before the first frame update
 
 	//gui
@@ -56,6 +57,11 @@ public class AssetManager_View : MonoBehaviour, IAssetManagerView
 		StartCoroutine(ShowLoadDialogCoroutine());
 	}
 
+	public void SaveAssetButton()
+	{
+		saveAssetEvent(this, new SaveAssetsArgs());
+	}
+
 	IEnumerator ShowLoadDialogCoroutine()
 	{
 		// Show a load file dialog and wait for a response from user
@@ -67,7 +73,10 @@ public class AssetManager_View : MonoBehaviour, IAssetManagerView
 		// and the path to the selected file (FileBrowser.Result) (null, if FileBrowser.Success is false)
 		string path = FileBrowser.Result;
 		Debug.Log("file = "+path);
-		OnRaiseEvent(new LoadAssetsArgs(path));
+		if (path != "")
+		{
+			OnLoadEvent(path);
+		}
 		//loadAssetEvent(this, new LoadAssetsArgs(FileBrowser.Result));
 
 	}
@@ -100,18 +109,21 @@ public class AssetManager_View : MonoBehaviour, IAssetManagerView
 		colBlock.normalColor = col;
 		m_pipelineButtons[_name].colors = colBlock;
 	}
+	public void IsAssetLoaded(bool val) //update view mode for when an asset is loaded in the system or not
+	{
+		//update pipeline buttons
+		foreach(Button button in m_pipelineButtons.Values)
+		{
+			button.interactable = val;
+		}
+		//make valide the save button
+		GameObject.Find("Save").GetComponent<Button>().interactable = val;
+	}
+
 
 	//handlers
-	void OnRaiseEvent(LoadAssetsArgs args)
+	void OnLoadEvent(string _path)
 	{
-		EventHandler<LoadAssetsArgs> handler = loadAssetEvent;
-
-		// Event will be null if there are no subscribers
-		if (handler != null)
-		{
-			// Use the () operator to raise the event.
-			handler(this, args);
-		}
-
+		loadAssetEvent(this, new LoadAssetsArgs(_path));
 	}
 }

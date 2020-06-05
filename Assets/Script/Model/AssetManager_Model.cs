@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
 public class AssetManagerModel 
@@ -10,6 +12,7 @@ public class AssetManagerModel
     public string AssetPipelineFolder { get; private set; }
 
     private string m_assetPath;
+    private string m_assetSavedFile;
     private Dictionary<TaskName,ITasksController> m_tasks;
 
     //events
@@ -40,6 +43,7 @@ public class AssetManagerModel
         Debug.Log("AssetName = " + Path.GetFileName(_path));
         m_assetPath = _path;
         AssetName = Path.GetFileName(m_assetPath);//todo : update name
+        m_assetSavedFile = m_assetPath + "\\" + AssetName + ".assetProd";
         ParseTasks(m_assetPath);
         UpdateTasks();
     }
@@ -57,6 +61,11 @@ public class AssetManagerModel
         Debug.Log(Directory.GetDirectories(_path).Length);
         string[] pathsDir = Directory.GetDirectories(_path);
         string folder = "";
+        //Load the content of the asset from the saved file if exist
+        if (File.Exists(m_assetSavedFile))
+        {
+            Load();
+        }
         foreach (string path in pathsDir)
         {
             folder = Path.GetFileName(path);
@@ -119,18 +128,45 @@ public class AssetManagerModel
                     }
                 }
                 CheckStateValuesRec(nextTask); //recursively check for the next task state
-                
             }
-
         }
     }
 
     private void UpdateTasks()
     {
         Debug.Log("Update tasks");
-        updateTaskEvent(this, new UpdatTaskEvent(m_tasks));
+        updateTaskEvent(this, new UpdatTaskEvent(m_tasks)); //update the view part according to the state task
     }
 
+    public void Save()
+    {
+        SavedState[] savedStates = new SavedState[m_tasks.Count];
+        int index = 0;
+        foreach (ITasksController task in m_tasks.Values)
+        {
+            savedStates[index] = task.Serialize();
+            index++;
+        }
+        IFormatter formatter = new BinaryFormatter();
+        Stream stream = new FileStream(m_assetSavedFile, FileMode.Create, FileAccess.Write);
+        formatter.Serialize(stream, savedStates);
+        stream.Close();
+    }
+    public void Load()
+    {
+        IFormatter formatter = new BinaryFormatter();
+
+        Stream stream = new FileStream(m_assetSavedFile, FileMode.Open, FileAccess.Read);
+        SavedState[] savedState = ((SavedState[])formatter.Deserialize(stream));
+        stream.Close();
+        Debug.Log(savedState);
+        int index = 0;
+        foreach(ITasksController task in m_tasks.Values)
+        {
+            task.Deserialize(savedState[index]);
+            index++;
+        }
+    }
 }
 
 public class UpdatTaskEvent : EventArgs

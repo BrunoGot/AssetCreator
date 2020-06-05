@@ -14,6 +14,8 @@ public class AssetManagerController
         m_view = _view;
         m_model = _model;
         m_view.loadAssetEvent += LoadAsset;
+        m_view.saveAssetEvent += SaveAsset;
+
         m_model.updateTaskEvent += UpdateTaskView;
         m_view.InitPipelineButtons(m_model.GetTasks());
 
@@ -25,14 +27,22 @@ public class AssetManagerController
         string parentFolder = Path.GetDirectoryName(_args.Path);
         parentFolder = Path.GetDirectoryName(parentFolder);
         parentFolder = Path.GetFileName(parentFolder);
-        Debug.Log("Asset loaded : " + parentFolder+ " m_model.AssetPipelineFolder = "+ m_model.AssetPipelineFolder);
+        Debug.Log("Asset loaded : " + parentFolder + " m_model.AssetPipelineFolder = " + m_model.AssetPipelineFolder);
         //Debug.Log("folder = " + );
         if (parentFolder == m_model.AssetPipelineFolder)
+        {
             m_model.LoadAsset(_args.Path);
-        else 
+            m_view.IsAssetLoaded(true);
+        }
+        else
         {
             ModalWindows.ModalWindow.ThrowError("error loading asset");
         }
+    }
+
+    private void SaveAsset(object _sender, SaveAssetsArgs _args)
+    {
+        m_model.Save();//foreach(m_)
     }
 
     private void UpdateTaskView(object _sender, UpdatTaskEvent _args)

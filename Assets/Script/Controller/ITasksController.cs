@@ -1,6 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
 public enum TaskName
@@ -21,6 +24,9 @@ public interface ITasksController
     string GetWarning();
     void SetWarning(string _msg);
     void OnSelect();
+
+    SavedState Serialize(); //used to save task
+    void Deserialize(SavedState _savedState); //used to load task
 }
 
 public abstract class TaskController : ITasksController
@@ -68,5 +74,20 @@ public abstract class TaskController : ITasksController
     {
         Debug.Log("click on " + m_taskName);
     }
+    public virtual SavedState Serialize()
+    {
+        return new ConceptState(new string[1]) as SavedState; //smell, temporary
+    }
+   
+    public virtual void Deserialize(SavedState _savedState)
+    {
+        Debug.Log("deserialize " + m_taskName);
+    }
+
+}
+
+[Serializable]
+public abstract class SavedState
+{
 
 }

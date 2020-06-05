@@ -23,6 +23,7 @@ public class PanelBoard_Controller
         Debug.Log("start panel button");
         GameObject panelButon = GameObject.Find("PanelBoard");
         m_view = panelButon.AddComponent<PanelBoard_View>();
+        m_view.Init();
         m_view.addPanelEvent += HandleAddNewButton;
         m_view.onMainButtonEvent += HandleMainButton;
     }
@@ -42,6 +43,11 @@ public class PanelBoard_Controller
     public void RemovePanel(GameObject _panel)
     {
         m_view.RemovePanel(_panel);
+    }
+
+    public GameObject CreateNewPanel()//used to create a new panel from the system 
+    {
+        return m_view.CreatePanel();
     }
 }
 

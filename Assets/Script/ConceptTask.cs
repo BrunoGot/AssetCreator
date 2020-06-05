@@ -1,5 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using UnityEditorInternal;
 using UnityEngine;
 
 /*
@@ -14,7 +19,7 @@ public class ConceptTask : TaskController
 {
     //  private ConceptTaskView m_view;
     IConcept_View m_view;
-    
+
     //concept list assigned to their ID button
     Dictionary<int, string> m_concepts; //idbutton linked to the img path of the concept
 
@@ -35,7 +40,7 @@ public class ConceptTask : TaskController
     {
         base.OnSelect();
         m_view.DisplayPanel(true);
-       
+
     }
 
     private void HandleAddConcept(object _sender, AddConceptEvent _eventArgs)
@@ -46,12 +51,143 @@ public class ConceptTask : TaskController
 
     private void HandleSelectConcept(object _sender, MainButtonEvent _eventArg)
     {
-        System.Diagnostics.Process cmd = new System.Diagnostics.Process();
-        cmd.StartInfo.FileName = "cmd.exe";
-        cmd.StartInfo.Arguments = "/C "+m_concepts[_eventArg.ButtonId];
-        cmd.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-        cmd.StartInfo.CreateNoWindow = true;
-        cmd.Start();
+        Debug.Log("open image");
+        if (m_concepts.ContainsKey(_eventArg.ButtonId))
+        {
+            System.Diagnostics.Process cmd = new System.Diagnostics.Process();
+            cmd.StartInfo.FileName = "cmd.exe";
+            cmd.StartInfo.Arguments = "/C " + m_concepts[_eventArg.ButtonId];
+            cmd.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+            cmd.StartInfo.CreateNoWindow = true;
+            cmd.Start();
+        }
         //Process.Start("CMD.exe", "/C "+m_concepts[_eventArg.ButtonId]);
     }
+
+    public override SavedState Serialize()
+    {
+        string[] imgPaths = new string[m_concepts.Count];
+        int index = 0;
+        foreach (string imgPath in m_concepts.Values)
+        {
+            imgPaths[index] = imgPath;
+            index++;
+        }
+        Debug.Log("Saving concept");
+        MementoHandler m = new MementoHandler(); //using memento pattern to handle saving/loading and also undo/redo in the future
+        m.SetState(imgPaths); //will move when a new concept is added, to handle undo/redo functionality
+        return m.GetState() as SavedState;
+/*        IFormatter formatter = new BinaryFormatter();
+        Stream stream = new FileStream("C:\\Users\\Natspir\\NatspirProd\\Test.assetProd", FileMode.Create, FileAccess.Write);
+        formatter.Serialize(stream, m.GetState());
+        stream.Close();*/
+    }
+    public override void Deserialize(SavedState _savedState)
+    {
+        base.Deserialize(_savedState);
+        /*IFormatter formatter = new BinaryFormatter();
+
+        Stream stream = new FileStream("C:\\Users\\Natspir\\NatspirProd\\Test.assetProd", FileMode.Open, FileAccess.Read);
+        string[] imgPaths = ((ConceptState)formatter.Deserialize(stream)).ImgPaths;
+        stream.Close();*/
+        string[] imgPaths = ((ConceptState)_savedState).ImgPaths;
+        Debug.Log(imgPaths);
+        m_view.LoadConcepts(imgPaths);
+    }
 }
+
+public class MementoHandler
+{
+    CareTaker m_carTaker;
+    Originator m_originator;
+    
+    public MementoHandler()
+    {
+        m_carTaker = new CareTaker();
+        m_originator = new Originator();
+    }
+
+    public void SetState(string[] _imgList)
+    { 
+        m_originator.SetState(new ConceptState(_imgList));
+        m_carTaker.Add(m_originator.SaveToMemento());
+    }
+
+    public ConceptState GetState()
+    {
+        m_originator.RestoreToMemento(m_carTaker.Get(1));
+        return m_originator.GetState();
+    }
+}
+
+public class Originator
+{
+    private ConceptState m_state;
+
+    public void SetState(ConceptState _state)
+    {
+        m_state = _state;
+    }
+
+    public ConceptState GetState()
+    {
+        return m_state;
+    }
+
+    public Memento SaveToMemento()
+    {
+        Debug.Log("Originator : sauvegardé dans le mémento.");
+        return new Memento(m_state);
+    }
+
+    public void RestoreToMemento(Memento _m)
+    {
+        m_state = _m.GetSavedState();
+    }
+}
+
+[Serializable]
+public class ConceptState : SavedState
+{
+    public string[] ImgPaths; //path of the loaded images
+    public ConceptState(string[] _imgPaths)
+    {
+        ImgPaths = _imgPaths;
+    }
+}
+
+public class Memento
+{
+
+
+    private ConceptState m_state;
+    public Memento(ConceptState _state)
+    {
+        m_state = _state;
+    }
+
+    public ConceptState GetSavedState()
+    {
+        return m_state;
+    }
+
+}
+
+public class CareTaker
+{
+    private List<Memento> m_mementos;
+    public CareTaker()
+    {
+        m_mementos = new List<Memento>();
+    }
+
+    public void Add(Memento _m)
+    {
+        m_mementos.Add(_m);
+    }
+    public Memento Get(int _index)
+    {
+        return m_mementos[_index% m_mementos.Count];
+    }
+}
+
