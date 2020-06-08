@@ -9,6 +9,7 @@ public interface IAssetManagerView
     event EventHandler<LoadAssetsArgs> loadAssetEvent;
     event EventHandler<SaveAssetsArgs> saveAssetEvent; //trigged when clicked on save button
 
+    void Init(string _lastassetPath, Dictionary<TaskName, ITasksController> _tasks); //used to initialize some default values and preferences
     void UpdateTaskButton(TaskName _name, TaskState _state, string _warningMessage);
     void InitPipelineButtons(Dictionary<TaskName, ITasksController> _tasks);
     void IsAssetLoaded(bool val); //update view mode for when an asset is loaded in the system or not

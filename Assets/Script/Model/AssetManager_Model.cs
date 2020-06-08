@@ -12,7 +12,8 @@ public class AssetManagerModel
     public string AssetPipelineFolder { get; private set; }
 
     private string m_assetPath;
-    private string m_assetSavedFile;
+    private string m_assetSavedFile; //path to write asset file
+    private string m_systemSavedPref; //path to write system preferences
     private Dictionary<TaskName,ITasksController> m_tasks;
 
     //events
@@ -21,6 +22,7 @@ public class AssetManagerModel
     public AssetManagerModel()
     {
         AssetPipelineFolder = "01_ASSET_3D";
+        m_systemSavedPref = Directory.GetCurrentDirectory() + "//AssetCreatorPref.acpref";
         InitPipelineTasks();
     }
 
@@ -137,6 +139,31 @@ public class AssetManagerModel
         Debug.Log("Update tasks");
         updateTaskEvent(this, new UpdatTaskEvent(m_tasks)); //update the view part according to the state task
     }
+    /*save and load system preferences. Called by the controller*/
+    public void SaveSystem()
+    {
+        SystemState state = new SystemState(m_assetPath);
+        //replace this part by a save(_path, object) function
+        IFormatter formatter = new BinaryFormatter();
+        Stream stream = new FileStream(m_systemSavedPref, FileMode.Create, FileAccess.Write);
+        formatter.Serialize(stream, state);
+        stream.Close();
+    }
+
+    /*save and load system preferences. Called by the controller*/
+    public SystemState LoadSystem()
+    {
+        SystemState savedState = null;
+        IFormatter formatter = new BinaryFormatter();
+        if (File.Exists(m_systemSavedPref))
+        {
+            Stream stream = new FileStream(m_systemSavedPref, FileMode.Open, FileAccess.Read);
+            savedState = ((SystemState)formatter.Deserialize(stream));
+            stream.Close();
+
+        }
+        return savedState;
+    }
 
     public void Save()
     {
@@ -152,6 +179,7 @@ public class AssetManagerModel
         formatter.Serialize(stream, savedStates);
         stream.Close();
     }
+
     public void Load()
     {
         IFormatter formatter = new BinaryFormatter();
@@ -176,4 +204,20 @@ public class UpdatTaskEvent : EventArgs
     {
         Tasks = _tasks;
     }
+}
+
+[Serializable]
+public class SystemState //class used to save systeme preferences
+{
+    public string LastAssetPath;
+    public SystemState(string _assetPath)
+    {
+        LastAssetPath = Path.GetDirectoryName(_assetPath);
+        Debug.Log("Path.GetDirectoryName(_assetPath) = " + Path.GetDirectoryName(_assetPath));
+    }
+}
+
+[Serializable] //class used to save asset state and preference
+public class AssetState {
+    public SavedState[] SavedStates;
 }

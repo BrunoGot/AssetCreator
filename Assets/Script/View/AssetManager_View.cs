@@ -10,7 +10,7 @@ public class AssetManager_View : MonoBehaviour, IAssetManagerView
 	public event EventHandler<LoadAssetsArgs> loadAssetEvent;
 	public event EventHandler<SaveAssetsArgs> saveAssetEvent;
 	// Start is called before the first frame update
-
+	string m_lastPath = null;
 	//gui
 	private Dictionary<TaskName, Button> m_pipelineButtons; //dic containing all the buttons of the 'pipeline' panel
     void Start()
@@ -20,6 +20,12 @@ public class AssetManager_View : MonoBehaviour, IAssetManagerView
 		FileBrowser.SetExcludedExtensions(".lnk", ".tmp", ".zip", ".rar", ".exe");
 		FileBrowser.AddQuickLink("Users", "C:\\Users", null);
 
+	}
+
+	public void Init(string _lastAssetPath, Dictionary<TaskName, ITasksController> _tasks)
+	{
+		m_lastPath = _lastAssetPath;
+		InitPipelineButtons(_tasks);
 	}
 
 	public void InitPipelineButtons(Dictionary<TaskName, ITasksController> _tasks)
@@ -66,7 +72,8 @@ public class AssetManager_View : MonoBehaviour, IAssetManagerView
 	{
 		// Show a load file dialog and wait for a response from user
 		// Load file/folder: file, Initial path: default (Documents), Title: "Load File", submit button text: "Load"
-		yield return FileBrowser.WaitForLoadDialog(true, null, "Load File", "Load");
+		
+		yield return FileBrowser.WaitForLoadDialog(true, m_lastPath, "Load File", "Load");
 
 		// Dialog is closed
 		// Print whether a file is chosen (FileBrowser.Success)
@@ -125,5 +132,6 @@ public class AssetManager_View : MonoBehaviour, IAssetManagerView
 	void OnLoadEvent(string _path)
 	{
 		loadAssetEvent(this, new LoadAssetsArgs(_path));
+		m_lastPath = _path;
 	}
 }

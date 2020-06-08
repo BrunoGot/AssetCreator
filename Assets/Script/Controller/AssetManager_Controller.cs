@@ -15,10 +15,20 @@ public class AssetManagerController
         m_model = _model;
         m_view.loadAssetEvent += LoadAsset;
         m_view.saveAssetEvent += SaveAsset;
-
+        SystemState state = m_model.LoadSystem();
+        string lastAssetPath = null;
+        if(state != null)
+        {
+            lastAssetPath = state.LastAssetPath;
+        }
         m_model.updateTaskEvent += UpdateTaskView;
-        m_view.InitPipelineButtons(m_model.GetTasks());
+//        m_view.InitPipelineButtons(m_model.GetTasks());
+        m_view.Init(lastAssetPath, m_model.GetTasks());
+    }
 
+    ~AssetManagerController()
+    {
+        m_model.SaveSystem();
     }
 
     //trigged when click on load asset button
