@@ -12,26 +12,36 @@ public class PanelBoard_Controller
 {
     //view part
     IPanelBoardView m_view;
+    //model part
+    private List<GameObject> m_panels;
 
     //events
     public event EventHandler<AddPanelEvent> addPanelEvent;
     public event EventHandler<MainButtonEvent> onMainButtonEvent;
+    public event EventHandler<MainButtonEvent> removePanelEvent;
 
     //params
     public PanelBoard_Controller()
     {
         Debug.Log("start panel button");
         GameObject panelButon = GameObject.Find("PanelBoard");
+
+        m_panels = new List<GameObject>(); //the list containing the created buttons
+
         m_view = panelButon.AddComponent<PanelBoard_View>();
         m_view.Init();
         m_view.addPanelEvent += HandleAddNewButton;
         m_view.onMainButtonEvent += HandleMainButton;
+        m_view.removePanelEvent += HandleRemoveButton;
+
+
     }
 
     void HandleAddNewButton(object _sender, AddPanelEvent _eventArgs)
     {
         Debug.Log("click on add panel in controller");
         //spread the signal to the rest of the application
+        _eventArgs.ButtonId = CreateNewPanel();
         addPanelEvent(this, _eventArgs);
     }
 
@@ -39,15 +49,30 @@ public class PanelBoard_Controller
     {
         onMainButtonEvent(this, _eventArgs); //spread the signal/connection to the application part
     }
+    void HandleRemoveButton(object _sender, MainButtonEvent _eventArgs)
+    {
+        removePanelEvent(this, _eventArgs); //pass the remove signal to the rest of the system    
+        int id = _eventArgs.ButtonId;
+        RemovePanel(m_panels[id]);
+        m_panels.RemoveAt(id);
+    }
 
     public void RemovePanel(GameObject _panel)
     {
         m_view.RemovePanel(_panel);
     }
 
-    public GameObject CreateNewPanel()//used to create a new panel from the system 
+    public int CreateNewPanel()//used to create a new panel from the system 
     {
-        return m_view.CreatePanel();
+        int id = m_panels.Count;
+        GameObject panel = m_view.CreatePanel(id); //create a new panel with a new id*
+        m_panels.Add(panel);
+        return id;
+    }
+
+    public GameObject GetPanel(int _idPanel)
+    {
+        return m_panels[_idPanel];
     }
 }
 

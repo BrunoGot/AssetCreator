@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Threading.Tasks;
 //using UnityEditorInternal;
 using UnityEngine;
 
@@ -23,6 +24,9 @@ public class ConceptTask : TaskController
     //concept list assigned to their ID button
     Dictionary<int, string> m_concepts; //idbutton linked to the img path of the concept
 
+    //events 
+    public override event EventHandler<UpdateTaskEvent> updateTaskEvent; //sended to the asset manager part
+
     public ConceptTask(TaskState _state, TaskName[] _nextTasks) : base(_state, _nextTasks)
     {
         m_taskName = TaskName.Concepts;
@@ -31,7 +35,8 @@ public class ConceptTask : TaskController
         m_view = conceptPanel.AddComponent<Concept_View>();
         m_view.selectConceptEvent += HandleSelectConcept;
         m_view.addConceptEvent += HandleAddConcept;
-
+        m_view.validConceptEvent += HandleUpdateConcept;
+        m_view.removeConceptEvent += HandleRemoveConcept;
         m_concepts = new Dictionary<int, string>();
 
     }
@@ -47,13 +52,19 @@ public class ConceptTask : TaskController
     {
         Debug.Log("Add a button with id = " + _eventArgs.IdButton);
         m_concepts.Add(_eventArgs.IdButton, _eventArgs.ConceptPath);
+        if (m_state == TaskState.Todo)
+        {
+            m_state = TaskState.Progressing;
+            updateTaskEvent(this, new UpdateTaskEvent(TaskName.Concepts, this));
+        }
     }
 
     private void HandleSelectConcept(object _sender, MainButtonEvent _eventArg)
     {
-        Debug.Log("open image");
+        Debug.Log("try to open image");
         if (m_concepts.ContainsKey(_eventArg.ButtonId))
         {
+            Debug.Log("Open image " + _eventArg.ButtonId);
             System.Diagnostics.Process cmd = new System.Diagnostics.Process();
             cmd.StartInfo.FileName = "cmd.exe";
             cmd.StartInfo.Arguments = "/C " + m_concepts[_eventArg.ButtonId];
@@ -61,6 +72,13 @@ public class ConceptTask : TaskController
             cmd.StartInfo.CreateNoWindow = true;
             cmd.Start();
         }
+        //Process.Start("CMD.exe", "/C "+m_concepts[_eventArg.ButtonId]);
+    }
+    //trigged when remove a concept from view
+    private void HandleRemoveConcept(object _sender, MainButtonEvent _eventArg)
+    {
+        Debug.Log("RemoveObject id = "+ _eventArg.ButtonId);
+        m_concepts.Remove(_eventArg.ButtonId);
         //Process.Start("CMD.exe", "/C "+m_concepts[_eventArg.ButtonId]);
     }
 
@@ -75,7 +93,7 @@ public class ConceptTask : TaskController
         }
         Debug.Log("Saving concept");
         MementoHandler m = new MementoHandler(); //using memento pattern to handle saving/loading and also undo/redo in the future
-        m.SetState(imgPaths); //will move when a new concept is added, to handle undo/redo functionality
+        m.SetState(imgPaths, m_state); //will move when a new concept is added, to handle undo/redo functionality
         return m.GetState() as SavedState;
 /*        IFormatter formatter = new BinaryFormatter();
         Stream stream = new FileStream("C:\\Users\\Natspir\\NatspirProd\\Test.assetProd", FileMode.Create, FileAccess.Write);
@@ -90,9 +108,18 @@ public class ConceptTask : TaskController
         Stream stream = new FileStream("C:\\Users\\Natspir\\NatspirProd\\Test.assetProd", FileMode.Open, FileAccess.Read);
         string[] imgPaths = ((ConceptState)formatter.Deserialize(stream)).ImgPaths;
         stream.Close();*/
-        string[] imgPaths = ((ConceptState)_savedState).ImgPaths;
-        Debug.Log(imgPaths);
-        m_view.LoadConcepts(imgPaths);
+        ConceptState conceptState = ((ConceptState)_savedState);
+        //Debug.Log(imgPaths);
+        m_view.LoadConcepts(conceptState.ImgPaths);
+        //load the state of the task
+        HandleUpdateConcept(this,  new UpdateStateEvent(conceptState.StateTask));
+    }
+
+    public void HandleUpdateConcept(object _sender, UpdateStateEvent _args)
+    {
+        Debug.Log("Valid the step !");
+        m_state = _args.State;
+        updateTaskEvent(this, new UpdateTaskEvent(TaskName.Concepts, this));
     }
 }
 
@@ -107,9 +134,9 @@ public class MementoHandler
         m_originator = new Originator();
     }
 
-    public void SetState(string[] _imgList)
+    public void SetState(string[] _imgList, TaskState _stateTask)
     { 
-        m_originator.SetState(new ConceptState(_imgList));
+        m_originator.SetState(new ConceptState(_imgList, _stateTask));
         m_carTaker.Add(m_originator.SaveToMemento());
     }
 
@@ -150,9 +177,11 @@ public class Originator
 public class ConceptState : SavedState
 {
     public string[] ImgPaths; //path of the loaded images
-    public ConceptState(string[] _imgPaths)
+    public TaskState StateTask;
+    public ConceptState(string[] _imgPaths, TaskState _state)
     {
-        ImgPaths = _imgPaths;
+        ImgPaths = _imgPaths; //the differents image path of the concepts
+        StateTask = _state; //save the state of the task
     }
 }
 

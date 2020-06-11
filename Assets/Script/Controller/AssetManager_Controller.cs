@@ -55,7 +55,7 @@ public class AssetManagerController
         m_model.Save();//foreach(m_)
     }
 
-    private void UpdateTaskView(object _sender, UpdatTaskEvent _args)
+    private void UpdateTaskView(object _sender, UpdateTaskEvent _args)
     {
         Debug.Log("UpdateTaskView");
         foreach(TaskName taskName in _args.Tasks.Keys)

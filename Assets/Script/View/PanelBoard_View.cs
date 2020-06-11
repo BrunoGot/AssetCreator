@@ -11,7 +11,7 @@ public class PanelBoard_View : MonoBehaviour, IPanelBoardView
     //events
     public event EventHandler<AddPanelEvent> addPanelEvent;
     public event EventHandler<MainButtonEvent> onMainButtonEvent;
-    private List<GameObject> m_panels;
+    public event EventHandler<MainButtonEvent> removePanelEvent;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,7 +22,6 @@ public class PanelBoard_View : MonoBehaviour, IPanelBoardView
     {
         transform.Find("AddPanelButton").GetComponent<Button>().onClick.AddListener(AddButtonHandler);
         m_buttonPanel = Resources.Load<GameObject>("GUI/ButtonPanelTemplate") as GameObject;
-        m_panels = new List<GameObject>(); //just the list containing the created buttons
     }
 
     // Update is called once per frame
@@ -31,17 +30,25 @@ public class PanelBoard_View : MonoBehaviour, IPanelBoardView
         
     }
 
-    public GameObject CreatePanel()
+    //create a new panel, assign the new id and return the gameobject to the controller that called it
+    public GameObject CreatePanel(int _newId)
     {
-        GameObject button = Instantiate(m_buttonPanel, this.transform);
-        m_panels.Add(button);
-        GameObject mainButton = button.transform.Find("MainButton").gameObject;
-        mainButton.GetComponent<Button>().onClick.AddListener(() => MainButtonHandler(mainButton.GetInstanceID()));
-        return mainButton;
+        int idPanel = _newId;// m_panels.Count; //use the button position in the list as button id. Default ID button can change with some update so its not very stable
+        GameObject panel = Instantiate(m_buttonPanel, this.transform);
+        GameObject mainButton = panel.transform.Find("MainButton").gameObject;
+        mainButton.GetComponent<Button>().onClick.AddListener(() => MainButtonHandler(idPanel));
+        GameObject deleteButton = mainButton.transform.Find("DeleteButton").gameObject;
+        deleteButton.GetComponent<Button>().onClick.AddListener(()=>DeleteHandler(idPanel));
+        return panel;
     }
     public void AddButtonHandler() //add a new panelon cliced
     {
-        addPanelEvent(this, new AddPanelEvent(CreatePanel()));//spread signal that a new panel has been added to initialise it in the application part if needed
+        addPanelEvent(this, new AddPanelEvent());//spread signal that a new panel has been added to initialise it in the application part if needed
+    }
+
+    private void DeleteHandler(int _idButton)
+    {
+        removePanelEvent(this, new MainButtonEvent(_idButton));
     }
 
     public void PlayButtonHandler()
@@ -57,7 +64,6 @@ public class PanelBoard_View : MonoBehaviour, IPanelBoardView
     }
     public void RemovePanel(GameObject _panel)
     {
-        m_panels.Remove(_panel);
         Destroy(_panel);
     }
 

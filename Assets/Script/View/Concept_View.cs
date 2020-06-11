@@ -14,9 +14,12 @@ public class Concept_View : MonoBehaviour, IConcept_View
     //events
     public event EventHandler<AddConceptEvent> addConceptEvent;
     public event EventHandler<MainButtonEvent> selectConceptEvent;
+    public event EventHandler<MainButtonEvent> removeConceptEvent;
+    public event EventHandler<UpdateStateEvent> validConceptEvent;
 
     //parameter
-    private Button m_newConcept; //buffer used to save the id of the last button created
+    private Button m_newConcept; //buffer used to save the id of the last button created => to replace by int id
+    private int m_idNewConcept; //id of the last concept created. Will replace m_newConcept
     //gui
     private Button m_quitPanel; //Button to quit the concept mode
 
@@ -32,13 +35,16 @@ public class Concept_View : MonoBehaviour, IConcept_View
         m_panelBoard = new PanelBoard_Controller();
         m_panelBoard.addPanelEvent += HandleNewConcept;
         m_panelBoard.onMainButtonEvent += HandleSelectConcept;
+        m_panelBoard.removePanelEvent += HandleRemoveConcept;
         DisplayPanel(false);
     }
 
     void InitGUI()
     {
         m_quitPanel = GameObject.Find("QuitButton").GetComponent<Button>();
-        m_quitPanel.onClick.AddListener(QuitPanelMode);
+        m_quitPanel.onClick.AddListener(QuitPanel);
+        Button validButton = GameObject.Find("ValidButton").GetComponent<Button>();
+        validButton.onClick.AddListener(ValidateStep);
     }
 
     // Update is called once per frame
@@ -59,7 +65,13 @@ public class Concept_View : MonoBehaviour, IConcept_View
     {
         Debug.Log("inside HandleNewConcept");
         FileReader.Instance.OpenFile(FilePathHandler);
-        m_newConcept = _args.ButtonConcept.GetComponent<Button>();
+        m_idNewConcept = _args.ButtonId;
+        m_newConcept = m_panelBoard.GetPanel(m_idNewConcept).transform.Find("MainButton").GetComponent<Button>();// _args.ButtonConcept.GetComponent<Button>();
+    }
+
+    private void HandleRemoveConcept(object _sender, MainButtonEvent _args)
+    {
+        removeConceptEvent(this, _args);
     }
 
     //used as delegate to get the path from the OpenAsset Button Function
@@ -83,7 +95,7 @@ public class Concept_View : MonoBehaviour, IConcept_View
         if(www.isNetworkError || www.isHttpError)
         {
             Debug.Log(www.error);
-            m_panelBoard.RemovePanel(m_newConcept.transform.parent.gameObject);
+            m_panelBoard.RemovePanel(m_panelBoard.GetPanel(m_idNewConcept));
         }
         else
         {
@@ -94,8 +106,9 @@ public class Concept_View : MonoBehaviour, IConcept_View
 
     private void CreateNewButtonConcept(Texture2D _imgConcept,string _path)
     {
+        Debug.Log("new concept = " + m_newConcept);
         m_newConcept.gameObject.GetComponent<RawImage>().texture = _imgConcept as Texture;
-        addConceptEvent(this, new AddConceptEvent(m_newConcept.gameObject.GetInstanceID(), _path)); //send the signal to the controller to save the new concept
+        addConceptEvent(this, new AddConceptEvent(m_idNewConcept, _path)); //send the signal to the controller to save the new concept
     }
 
     private void HandleSelectConcept(object _sender, MainButtonEvent _eventArgs)
@@ -103,9 +116,9 @@ public class Concept_View : MonoBehaviour, IConcept_View
         selectConceptEvent(this, _eventArgs); //get signal from the panelBoard module and give it to the controller to handle actions
     }
 
-    private void QuitPanelMode()
+    private void QuitPanel()
     {
-        gameObject.SetActive(false);
+        DisplayPanel(false);
     }
 
     public void LoadConcepts(string[] _imgs)
@@ -118,10 +131,20 @@ public class Concept_View : MonoBehaviour, IConcept_View
     {
         foreach (string img in _imgs)
         {
-            m_newConcept = m_panelBoard.CreateNewPanel().GetComponent<Button>();
+            m_idNewConcept = m_panelBoard.CreateNewPanel();
+            Debug.Log("Load concept : id = "+ m_idNewConcept + " path = " + img);
+            m_newConcept = m_panelBoard.GetPanel(m_idNewConcept).transform.Find("MainButton").GetComponent<Button>(); //new concept check if possibility to factorise this line
             FilePathHandler(img);
-            yield return new WaitForSeconds(0.5f);
+            float delay = 0.5f; //change it with some user prefs
+            yield return new WaitForSeconds(delay);
         }
+    }
+
+    public void ValidateStep()
+    {
+        Debug.Log("Validate the step");
+        validConceptEvent(this, new UpdateStateEvent(TaskState.Done));
+        QuitPanel();
     }
 
 }

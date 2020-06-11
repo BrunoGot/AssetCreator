@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class AssetManagerModel 
@@ -17,7 +18,7 @@ public class AssetManagerModel
     private Dictionary<TaskName,ITasksController> m_tasks;
 
     //events
-    public event EventHandler<UpdatTaskEvent> updateTaskEvent;
+    public event EventHandler<UpdateTaskEvent> updateTaskEvent;
 
     public AssetManagerModel()
     {
@@ -37,7 +38,11 @@ public class AssetManagerModel
         m_tasks.Add(TaskName.Animation, new ModelisationTask(TaskState.Todo, new TaskName[] { TaskName.FX })); //replace with new Animation Task
         m_tasks.Add(TaskName.FX, new ModelisationTask(TaskState.Todo, new TaskName[] { TaskName.LookDev })); //replace with new FX Task
         m_tasks.Add(TaskName.LookDev, new ModelisationTask(TaskState.Todo, new TaskName[] {})); //replace with new LookDev Task
-
+        foreach(ITasksController task in m_tasks.Values)
+        {
+            Debug.Log("Init taskEvent");
+            task.updateTaskEvent += UpdateTaskHandler;
+        }
     }
 
     public void LoadAsset(string _path) //algorthms to get and parse file/folder to load asset into the manager
@@ -137,7 +142,12 @@ public class AssetManagerModel
     private void UpdateTasks()
     {
         Debug.Log("Update tasks");
-        updateTaskEvent(this, new UpdatTaskEvent(m_tasks)); //update the view part according to the state task
+        updateTaskEvent(this, new UpdateTaskEvent(m_tasks)); //update the view part according to the state task
+    }
+    private void UpdateTaskHandler(object _sender, UpdateTaskEvent _args) //called by a task when some update has been done in the task
+    {
+        Debug.Log("Update tasks");
+        updateTaskEvent(this, _args); //update the view part according to the state task
     }
     /*save and load system preferences. Called by the controller*/
     public void SaveSystem()
@@ -197,12 +207,17 @@ public class AssetManagerModel
     }
 }
 
-public class UpdatTaskEvent : EventArgs
+public class UpdateTaskEvent : EventArgs
 {
     public Dictionary<TaskName,ITasksController> Tasks { get; private set; }
-    public UpdatTaskEvent(Dictionary<TaskName, ITasksController> _tasks)
+    public UpdateTaskEvent(Dictionary<TaskName, ITasksController> _tasks)
     {
         Tasks = _tasks;
+    }
+    public UpdateTaskEvent(TaskName _taskName, ITasksController _task)
+    {
+        Tasks = new Dictionary<TaskName, ITasksController>() ;
+        Tasks[_taskName] = _task;
     }
 }
 

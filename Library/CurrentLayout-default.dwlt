@@ -74,7 +74,7 @@ MonoBehaviour:
   m_MinSize: {x: 881, y: 342}
   m_MaxSize: {x: 16006, y: 8042}
   vertical: 0
-  controlID: 98
+  controlID: 94
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -118,7 +118,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 262
+    width: 328
     height: 450
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 4000, y: 4000}
@@ -287,9 +287,9 @@ MonoBehaviour:
   m_Children: []
   m_Position:
     serializedVersion: 2
-    x: 262
+    x: 328
     y: 0
-    width: 397
+    width: 331
     height: 450
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 4000, y: 4000}
@@ -347,9 +347,9 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 630.4
+    y: 523.2
     width: 1065
-    height: 153
+    height: 260
   m_ViewDataDictionary: {fileID: 0}
   m_SearchFilter:
     m_NameFilter: 
@@ -364,20 +364,20 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Script/Controller
+    - Assets/Resources/GUI
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Script/Controller
+  - Assets/Resources/GUI
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\Natspir\Documents\Code\Unity\AssetCreator
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 139}
-    m_SelectedIDs: 683c0000
-    m_LastClickedID: 15464
-    m_ExpandedIDs: 00000000d8360000da360000dc360000
+    scrollPos: {x: 0, y: 68}
+    m_SelectedIDs: f4360000
+    m_LastClickedID: 14068
+    m_ExpandedIDs: 00000000d8360000da360000dc36000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -430,8 +430,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 80340000ac3400009c3400003e34000042fbffff603500005a3400006cfbffff
-    m_LastClickedInstanceID: 13440
+    m_SelectedInstanceIDs: c4f8ffff
+    m_LastClickedInstanceID: -1852
     m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c6230000
     m_RenameOverlay:
@@ -498,7 +498,7 @@ MonoBehaviour:
     m_PrefName: Preview_InspectorPreview
   m_PreviewWindow: {fileID: 0}
   m_LastInspectedObjectInstanceID: -1
-  m_LastVerticalScrollValue: 148.24841
+  m_LastVerticalScrollValue: 0
 --- !u!114 &16
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -522,15 +522,15 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 73.6
-    width: 261
+    width: 327
     height: 429
   m_ViewDataDictionary: {fileID: 0}
   m_SceneHierarchy:
     m_TreeViewState:
-      scrollPos: {x: 0, y: 56}
-      m_SelectedIDs: da330000
-      m_LastClickedID: 13274
-      m_ExpandedIDs: 82ecffff8cecffff9cecffff70fbffffa8330000ba330000c8330000da3300001a34000036340000103500009835000002360000083600001a360000
+      scrollPos: {x: 0, y: 46.927372}
+      m_SelectedIDs: b4f8ffff
+      m_LastClickedID: -1868
+      m_ExpandedIDs: 28e7ffff42e7ffff30f8ffffb4f8ffffc4f8ffff54fbffff70fbffffb0330000be330000e4330000ee330000e03400001035000098350000aa35000008360000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -575,9 +575,9 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 262.4
+    x: 328
     y: 73.6
-    width: 395
+    width: 329
     height: 429
   m_ViewDataDictionary: {fileID: 0}
   m_ShowContextualTools: 0
@@ -590,9 +590,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 325, y: 203.14685, z: 0}
+    m_Target: {x: 522.8311, y: 509.18903, z: -50.573753}
     speed: 2
-    m_Value: {x: 325, y: 203.14685, z: 0}
+    m_Value: {x: 522.8311, y: 509.18903, z: -50.573753}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -642,9 +642,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 616.2944
+    m_Target: 215.5539
     speed: 2
-    m_Value: 616.2944
+    m_Value: 215.5539
   m_Ortho:
     m_Target: 1
     speed: 2
