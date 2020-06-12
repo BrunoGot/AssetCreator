@@ -67,6 +67,7 @@
     <Compile Include="Assets\Script\ConceptTask.cs" />
     <Compile Include="Assets\Script\Controller\AssetManager_Controller.cs" />
     <Compile Include="Assets\Script\Controller\ITasksController.cs" />
+    <Compile Include="Assets\Script\Controller\ModelisationTask.cs" />
     <Compile Include="Assets\Script\Controller\PanelBoard_Controller.cs" />
     <Compile Include="Assets\Script\FileReader.cs" />
     <Compile Include="Assets\Script\Interfaces\IAssetManager_View.cs" />
@@ -75,11 +76,12 @@
     <Compile Include="Assets\Script\ModalWindows\ErrorManager.cs" />
     <Compile Include="Assets\Script\ModalWindows\ErrorWindow_View.cs" />
     <Compile Include="Assets\Script\Model\AssetManager_Model.cs" />
-    <Compile Include="Assets\Script\ModelisationTask.cs" />
     <Compile Include="Assets\Script\UVTask.cs" />
     <Compile Include="Assets\Script\View\AssetManager_View.cs" />
     <Compile Include="Assets\Script\View\Concept_View.cs" />
+    <Compile Include="Assets\Script\View\Modelisation_View.cs" />
     <Compile Include="Assets\Script\View\PanelBoard_View.cs" />
+    <Compile Include="Assets\Script\View\Task_View.cs" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/2019.3.13f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>

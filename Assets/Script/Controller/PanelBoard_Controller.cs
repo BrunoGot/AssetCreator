@@ -21,14 +21,14 @@ public class PanelBoard_Controller
     public event EventHandler<MainButtonEvent> removePanelEvent;
 
     //params
-    public PanelBoard_Controller()
+    public PanelBoard_Controller(IPanelBoardView _view)
     {
         Debug.Log("start panel button");
         GameObject panelButon = GameObject.Find("PanelBoard");
 
         m_panels = new List<GameObject>(); //the list containing the created buttons
 
-        m_view = panelButon.AddComponent<PanelBoard_View>();
+        m_view = _view; // 
         m_view.Init();
         m_view.addPanelEvent += HandleAddNewButton;
         m_view.onMainButtonEvent += HandleMainButton;
@@ -53,6 +53,7 @@ public class PanelBoard_Controller
     {
         removePanelEvent(this, _eventArgs); //pass the remove signal to the rest of the system    
         int id = _eventArgs.ButtonId;
+        Debug.Log("id = "+ id);
         RemovePanel(m_panels[id]);
         m_panels.RemoveAt(id);
     }

@@ -35,7 +35,7 @@ public class ConceptTask : TaskController
         m_view = conceptPanel.AddComponent<Concept_View>();
         m_view.selectConceptEvent += HandleSelectConcept;
         m_view.addConceptEvent += HandleAddConcept;
-        m_view.validConceptEvent += HandleUpdateConcept;
+        m_view.validTaskEvent += HandleUpdateConcept;
         m_view.removeConceptEvent += HandleRemoveConcept;
         m_concepts = new Dictionary<int, string>();
 

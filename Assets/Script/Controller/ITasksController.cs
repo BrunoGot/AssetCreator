@@ -30,6 +30,8 @@ public interface ITasksController
 
     SavedState Serialize(); //used to save task
     void Deserialize(SavedState _savedState); //used to load task
+    void Reload(TaskState _state);
+
 }
 
 public abstract class TaskController : ITasksController
@@ -80,6 +82,7 @@ public abstract class TaskController : ITasksController
     {
         Debug.Log("click on " + m_taskName);
     }
+
     public virtual SavedState Serialize()
     {
         return new ConceptState(new string[1], TaskState.Todo) as SavedState; //smell, temporary
@@ -90,6 +93,11 @@ public abstract class TaskController : ITasksController
         Debug.Log("deserialize " + m_taskName);
     }
 
+    public void Reload(TaskState _state)
+    {
+        m_state = _state;
+        Debug.Log("Reload Task");
+    }
 
 }
 

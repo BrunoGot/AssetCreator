@@ -4,12 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public interface IConcept_View
+public interface IConcept_View:ITask_View
 {
     event EventHandler<AddConceptEvent> addConceptEvent;//spread Add panel signal
     event EventHandler<MainButtonEvent> selectConceptEvent;
     event EventHandler<MainButtonEvent> removeConceptEvent;
-    event EventHandler<UpdateStateEvent> validConceptEvent;
 
     void DisplayPanel(bool _val); //show or hide the concept panel
     void LoadConcepts(string[] _vals);

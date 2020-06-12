@@ -33,11 +33,11 @@ public class AssetManagerModel
         m_tasks.Add(TaskName.Concepts, new ConceptTask(TaskState.Todo, new TaskName[] { TaskName.Modelisation })); //replace with new Concept Task
         m_tasks.Add(TaskName.Modelisation, new ModelisationTask(TaskState.Todo, new TaskName[] { TaskName.UVs, TaskName.Rigging })); 
         m_tasks.Add(TaskName.UVs, new UVTask(TaskState.Todo, new TaskName[] { TaskName.Texturing }));
-        m_tasks.Add(TaskName.Texturing, new ModelisationTask(TaskState.Todo, new TaskName[] { TaskName.FX })); //replace with new Texturing Task
-        m_tasks.Add(TaskName.Rigging, new ModelisationTask(TaskState.Todo, new TaskName[] { TaskName.Animation })); //replace with new Rigging Task
-        m_tasks.Add(TaskName.Animation, new ModelisationTask(TaskState.Todo, new TaskName[] { TaskName.FX })); //replace with new Animation Task
-        m_tasks.Add(TaskName.FX, new ModelisationTask(TaskState.Todo, new TaskName[] { TaskName.LookDev })); //replace with new FX Task
-        m_tasks.Add(TaskName.LookDev, new ModelisationTask(TaskState.Todo, new TaskName[] {})); //replace with new LookDev Task
+        m_tasks.Add(TaskName.Texturing, new UVTask(TaskState.Todo, new TaskName[] { TaskName.FX })); //replace with new Texturing Task
+        m_tasks.Add(TaskName.Rigging, new UVTask(TaskState.Todo, new TaskName[] { TaskName.Animation })); //replace with new Rigging Task
+        m_tasks.Add(TaskName.Animation, new UVTask(TaskState.Todo, new TaskName[] { TaskName.FX })); //replace with new Animation Task
+        m_tasks.Add(TaskName.FX, new UVTask(TaskState.Todo, new TaskName[] { TaskName.LookDev })); //replace with new FX Task
+        m_tasks.Add(TaskName.LookDev, new UVTask(TaskState.Todo, new TaskName[] {})); //replace with new LookDev Task
         foreach(ITasksController task in m_tasks.Values)
         {
             Debug.Log("Init taskEvent");
@@ -80,7 +80,7 @@ public class AssetManagerModel
             switch(folder.ToLower()){
                 case "mode":
                     Debug.Log("Mode Folder detected");
-                    m_tasks[TaskName.Modelisation] = new ModelisationTask(TaskState.Progressing, new TaskName[]{ TaskName.UVs, TaskName.Rigging }); //m_state = read a saved file with last saved state
+                    m_tasks[TaskName.Modelisation].Reload(TaskState.Progressing); //m_state = read a saved file with last saved state
                     break;
                 case "UVs":
                     Debug.Log("UV Folder detected");
