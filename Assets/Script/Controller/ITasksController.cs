@@ -43,7 +43,7 @@ public abstract class TaskController : ITasksController
     
     public virtual event EventHandler<UpdateTaskEvent> updateTaskEvent;
 
-    public TaskController(TaskState _state, TaskName[] _nextTasks)
+    public TaskController(AssetManagerModel _assetManager, TaskState _state, TaskName[] _nextTasks)
     {
         m_state = _state;//m_state = read a saved file with last saved state
         m_nextTasks = _nextTasks;
@@ -99,6 +99,28 @@ public abstract class TaskController : ITasksController
         Debug.Log("Reload Task");
     }
 
+}
+
+public abstract class TaskModel
+{
+    //maping paths
+    protected Dictionary<string, string> m_softwareList; //(buttonId, Software path/extension) will be initialized from the future system singleton class
+    protected Dictionary<TaskName, string> m_mappingTaskPath; //should move to the system manager class and have something like System.GetPath(TaskName)
+    protected Dictionary<int, string> m_mappingVersionPath; //(versionNumber, versionPath)
+
+    //properties & link with Asset datas
+    protected AssetManagerModel m_assetManager;
+    protected TaskName m_taskName;
+
+    //parameters
+    protected int m_currentVersion;
+    
+    public TaskModel(AssetManagerModel _assetManager, TaskName _taskName)
+    {
+        m_assetManager = _assetManager;
+        m_taskName = _taskName;
+        m_currentVersion = 1;
+    }
 }
 
 [Serializable]

@@ -27,7 +27,7 @@ public class ConceptTask : TaskController
     //events 
     public override event EventHandler<UpdateTaskEvent> updateTaskEvent; //sended to the asset manager part
 
-    public ConceptTask(TaskState _state, TaskName[] _nextTasks) : base(_state, _nextTasks)
+    public ConceptTask(AssetManagerModel _assetManager, TaskState _state, TaskName[] _nextTasks) : base(_assetManager,_state, _nextTasks)
     {
         m_taskName = TaskName.Concepts;
         GameObject conceptPanel = GameObject.Find("ConceptPanel");

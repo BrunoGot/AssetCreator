@@ -32,7 +32,6 @@ public abstract class Task_View : MonoBehaviour, ITask_View
     {
         DisplayPanel(false);
         Button quitPanel = this.transform.Find("QuitButton").GetComponent<Button>();
-        Debug.Log("InitGUI quit panel = "+quitPanel.GetInstanceID());
         quitPanel.onClick.AddListener(QuitPanel);
         Button validButton = this.transform.Find("ValidButton").GetComponent<Button>();
         validButton.onClick.AddListener(ValidateStep);

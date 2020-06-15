@@ -11,6 +11,7 @@ public class AssetManagerModel
     // Start is called before the first frame update
     public string AssetName { get; private set; }
     public string AssetPipelineFolder { get; private set; }
+    public string AssetPath { get { return m_assetPath; } private set { } }
 
     private string m_assetPath;
     private string m_assetSavedFile; //path to write asset file
@@ -22,7 +23,7 @@ public class AssetManagerModel
 
     public AssetManagerModel()
     {
-        AssetPipelineFolder = "01_ASSET_3D";
+        AssetPipelineFolder = "01_ASSET_3D"; //move to the system class
         m_systemSavedPref = Directory.GetCurrentDirectory() + "//AssetCreatorPref.acpref";
         InitPipelineTasks();
     }
@@ -30,8 +31,8 @@ public class AssetManagerModel
     private void InitPipelineTasks() //init pipeline tasks with empty value
     {
         m_tasks = new Dictionary<TaskName, ITasksController>();
-        m_tasks.Add(TaskName.Concepts, new ConceptTask(TaskState.Todo, new TaskName[] { TaskName.Modelisation })); //replace with new Concept Task
-        m_tasks.Add(TaskName.Modelisation, new ModelisationTask(TaskState.Todo, new TaskName[] { TaskName.UVs, TaskName.Rigging })); 
+        m_tasks.Add(TaskName.Concepts, new ConceptTask(this, TaskState.Todo, new TaskName[] { TaskName.Modelisation })); //replace with new Concept Task
+        m_tasks.Add(TaskName.Modelisation, new ModelisationTask(this, TaskState.Todo, new TaskName[] { TaskName.UVs, TaskName.Rigging })); 
         m_tasks.Add(TaskName.UVs, new UVTask(TaskState.Todo, new TaskName[] { TaskName.Texturing }));
         m_tasks.Add(TaskName.Texturing, new UVTask(TaskState.Todo, new TaskName[] { TaskName.FX })); //replace with new Texturing Task
         m_tasks.Add(TaskName.Rigging, new UVTask(TaskState.Todo, new TaskName[] { TaskName.Animation })); //replace with new Rigging Task
@@ -88,7 +89,7 @@ public class AssetManagerModel
                     break;
                 case "Texturing":
                     Debug.Log("Texturing Folder detected");
-                    m_tasks[TaskName.Texturing] = new ModelisationTask(TaskState.Progressing, new TaskName[] { TaskName.FX});
+                    m_tasks[TaskName.Texturing] = new ModelisationTask(this, TaskState.Progressing, new TaskName[] { TaskName.FX});
                     break;
             }
         }

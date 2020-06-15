@@ -76,6 +76,7 @@
     <Compile Include="Assets\Script\ModalWindows\ErrorManager.cs" />
     <Compile Include="Assets\Script\ModalWindows\ErrorWindow_View.cs" />
     <Compile Include="Assets\Script\Model\AssetManager_Model.cs" />
+    <Compile Include="Assets\Script\Model\ModelisationTask_Model.cs" />
     <Compile Include="Assets\Script\UVTask.cs" />
     <Compile Include="Assets\Script\View\AssetManager_View.cs" />
     <Compile Include="Assets\Script\View\Concept_View.cs" />
