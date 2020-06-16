@@ -88,25 +88,25 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 12258}
     - Class: 114
-      Script: {instanceID: 12344}
+      Script: {instanceID: 12346}
     - Class: 114
-      Script: {instanceID: 12448}
+      Script: {instanceID: 12450}
     - Class: 114
-      Script: {instanceID: 12540}
+      Script: {instanceID: 12542}
     - Class: 114
-      Script: {instanceID: 12642}
+      Script: {instanceID: 12644}
     - Class: 114
-      Script: {instanceID: 12926}
+      Script: {instanceID: 12928}
     - Class: 114
-      Script: {instanceID: 12948}
+      Script: {instanceID: 12950}
     - Class: 114
-      Script: {instanceID: 12960}
+      Script: {instanceID: 12962}
     - Class: 114
-      Script: {instanceID: 12986}
+      Script: {instanceID: 12988}
     - Class: 114
-      Script: {instanceID: 12998}
+      Script: {instanceID: 13000}
     - Class: 114
-      Script: {instanceID: 13012}
+      Script: {instanceID: 13014}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -627,4 +627,4 @@ ScriptsOnlyBuild:
   platform: 5
   scenePathNames:
   - Assets/Scenes/SampleScene.unity
-  playerPath: C:/Users/Natspir/Documents/Code/Unity/AssetCreator/Build/V4/AssetCreator.exe
+  playerPath: C:/Users/Natspir/Documents/Code/Unity/AssetCreator/Build/V5/AssetCreator.exe
