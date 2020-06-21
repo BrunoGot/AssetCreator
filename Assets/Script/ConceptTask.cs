@@ -31,7 +31,7 @@ public class ConceptTask : TaskController
     {
         m_taskName = TaskName.Concepts;
         GameObject conceptPanel = GameObject.Find("ConceptPanel");
-        Debug.Log("Concept panel = " + conceptPanel);
+        //Debug.Log("Concept panel = " + conceptPanel);
         m_view = conceptPanel.AddComponent<Concept_View>();
         m_view.selectConceptEvent += HandleSelectConcept;
         m_view.addConceptEvent += HandleAddConcept;

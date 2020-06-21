@@ -18,6 +18,8 @@ public interface ITask_View
 
 public abstract class Task_View : MonoBehaviour, ITask_View
 {
+    protected GameObject m_subtaskForm; //fomr to add subtasks
+    //events
     public event EventHandler<UpdateStateEvent> validTaskEvent;
 
     public void DisplayPanel(bool _val) //show or hide the concept panel
@@ -26,6 +28,11 @@ public abstract class Task_View : MonoBehaviour, ITask_View
         cg.alpha = _val ? 1 : 0;
         cg.interactable = _val;
         cg.blocksRaycasts = _val;
+    }
+
+    protected void DisplaySubtaskForm(bool _val) //show/hide the subtask form
+    {
+        m_subtaskForm.SetActive(_val);
     }
 
     protected virtual void InitGUI()

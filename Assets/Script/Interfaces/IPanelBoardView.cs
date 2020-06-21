@@ -29,7 +29,7 @@ public interface IPanelBoardView
     event EventHandler<MainButtonEvent> onMainButtonEvent;
     event EventHandler<MainButtonEvent> removePanelEvent;
 
-    void Init(); //used to init manually beofre the "start" of a unityscript
+    void Init(string _buttonPanelResource); //used to init manually beofre the "start" of a unityscript
     // void MainButtonHandler(int _idButton); pas besoin en public finalement
     void PlayButtonHandler();
     void RemovePanel(GameObject _panel); //delete a panel from the view

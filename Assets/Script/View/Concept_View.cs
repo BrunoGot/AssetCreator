@@ -33,6 +33,7 @@ public class Concept_View : Task_View, IConcept_View
     void Start()
     {
         IPanelBoardView panelboard = GameObject.Find("ConceptPanelBoard").AddComponent<PanelBoard_View>();
+        panelboard.Init("GUI/ButtonPanelTemplate");
         m_panelBoard = new PanelBoard_Controller(panelboard);
         m_panelBoard.addPanelEvent += HandleNewConcept;
         m_panelBoard.onMainButtonEvent += HandleSelectConcept;

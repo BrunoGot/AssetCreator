@@ -29,7 +29,6 @@ public class PanelBoard_Controller
         m_panels = new List<GameObject>(); //the list containing the created buttons
 
         m_view = _view; // 
-        m_view.Init();
         m_view.addPanelEvent += HandleAddNewButton;
         m_view.onMainButtonEvent += HandleMainButton;
         m_view.removePanelEvent += HandleRemoveButton;
@@ -61,6 +60,10 @@ public class PanelBoard_Controller
     public void RemovePanel(GameObject _panel)
     {
         m_view.RemovePanel(_panel);
+    }
+    public void RemovePanel(int _panelID)
+    {
+        m_view.RemovePanel(m_panels[_panelID]);
     }
 
     public int CreateNewPanel()//used to create a new panel from the system 

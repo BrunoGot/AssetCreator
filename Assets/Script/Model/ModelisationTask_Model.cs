@@ -9,7 +9,7 @@ using UnityEngine;
  * */
 public class ModelisationTask_Model:TaskModel
 {
-    
+    private Dictionary<int, Subtask_Controller> m_Subtasks; //dictionary of the subtask linked to their button id
     public ModelisationTask_Model(AssetManagerModel _assetModel, TaskName _taskName) : base(_assetModel, _taskName)
     {
         m_softwareList = new Dictionary<string, string>();//will be initialized from the future system singleton class
@@ -40,5 +40,12 @@ public class ModelisationTask_Model:TaskModel
         cmd.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
         cmd.StartInfo.CreateNoWindow = true;
         cmd.Start();
+    }
+
+    public void CreateSubtask(string _subtaskName, int _softwareIndex, int _panelID, ISubtask_View viewPart)
+    {
+        Subtask_Model subTaskModel = new Subtask_Model(_subtaskName, _softwareIndex);
+        Subtask_Controller subTask = new Subtask_Controller(viewPart, subTaskModel);
+        m_Subtasks[_panelID] = subTask;
     }
 }

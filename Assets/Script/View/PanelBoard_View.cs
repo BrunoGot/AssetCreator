@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class PanelBoard_View : MonoBehaviour, IPanelBoardView
 {
     GameObject m_buttonPanel;
+    private string m_buttonPanelResource;
     //events
     public event EventHandler<AddPanelEvent> addPanelEvent;
     public event EventHandler<MainButtonEvent> onMainButtonEvent;
@@ -18,10 +19,11 @@ public class PanelBoard_View : MonoBehaviour, IPanelBoardView
        
     }
 
-    public void Init() //used to init manually beofre the "start" of a unityscript
+    public void Init(string _buttonPanelResource) //used to init manually beofre the "start" of a unityscript
     {
+        m_buttonPanelResource = _buttonPanelResource;
         transform.Find("AddPanelButton").GetComponent<Button>().onClick.AddListener(AddButtonHandler);
-        m_buttonPanel = Resources.Load<GameObject>("GUI/ButtonPanelTemplate") as GameObject;
+        m_buttonPanel = Resources.Load<GameObject>(m_buttonPanelResource) as GameObject; //"GUI/ButtonPanelTemplate"
     }
 
     // Update is called once per frame
