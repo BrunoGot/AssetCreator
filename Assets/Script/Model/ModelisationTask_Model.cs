@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,21 +11,19 @@ using UnityEngine;
 public class ModelisationTask_Model:TaskModel
 {
     private Dictionary<int, Subtask_Controller> m_Subtasks; //dictionary of the subtask linked to their button id
+
+    //public event EventHandler<LoadSubtaskEvent> onLoadSubtask;
+
     public ModelisationTask_Model(AssetManagerModel _assetModel, TaskName _taskName) : base(_assetModel, _taskName)
     {
-        m_softwareList = new Dictionary<string, string>();//will be initialized from the future system singleton class
-        m_softwareList["blender"] = ".blend";
-        m_softwareList["houdini"] = ".hou";
 
-        m_mappingTaskPath = new Dictionary<TaskName, string>();
-        m_mappingTaskPath[m_taskName] = "\\3d\\scenes\\Mode\\mode"; //will move to the system class or even a singleton pipelineSystem class that make mapping between some asset preferences and pipeline path location
 
-        m_mappingVersionPath = new Dictionary<int, string>();
-        m_mappingVersionPath[1] = "work_v001";
+        
+        m_Subtasks = new Dictionary<int, Subtask_Controller>();
 
     }
 
-    public void OpenAsset(string _softwareId)
+    /*public void OpenAsset(string _softwareId)
     {
         Debug.Log("m_assetManager.AssetName = " + m_assetManager.AssetName);
         Debug.Log("m_assetManager.AssetPipelineFolder = " + m_assetManager.AssetPath);
@@ -40,12 +39,58 @@ public class ModelisationTask_Model:TaskModel
         cmd.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
         cmd.StartInfo.CreateNoWindow = true;
         cmd.Start();
-    }
+    }*/
 
     public void CreateSubtask(string _subtaskName, int _softwareIndex, int _panelID, ISubtask_View viewPart)
     {
-        Subtask_Model subTaskModel = new Subtask_Model(_subtaskName, _softwareIndex);
+        Subtask_Model subTaskModel = new Subtask_Model(m_assetManager,m_taskName, _subtaskName, _softwareIndex);
         Subtask_Controller subTask = new Subtask_Controller(viewPart, subTaskModel);
         m_Subtasks[_panelID] = subTask;
+    }
+
+    public override SavedState SaveState()
+    {
+        List<SavedState> subtaskStates = new List<SavedState>();
+        //saving all the subtasks
+        int i = 0;
+        foreach(Subtask_Controller subtask in m_Subtasks.Values)
+        {
+            subtaskStates.Add(subtask.Serialize());
+            i++;
+        }
+        TaskModelState taskState = new TaskModelState(subtaskStates);
+        return taskState;
+    }
+    public void Load(SavedState _savedState)
+    {
+        //todo:
+        /*
+         * for i in m_subtasks : 
+         *  removeSubtask(i)
+         */
+         
+        
+        //Debug.Log("nombre de soustaches = " + state.SubtasksDatas.Length);
+
+    }
+
+    public void RemoveSubtask(int _idButton)
+    {
+        m_Subtasks[_idButton].Remove();//clean and delete view and model
+        m_Subtasks.Remove(_idButton);//rempve the subtask controller
+    }
+
+    public void Clean()
+    {
+        //cleanstuff
+    }
+}
+
+public class LoadSubtaskEvent:EventArgs
+{
+    public SubtaskState SubtasksData;
+    public LoadSubtaskEvent(SubtaskState _subtaskState)
+    {
+        SubtasksData = _subtaskState;
     }
 }

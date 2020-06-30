@@ -16,10 +16,11 @@ public class ModelisationTask: TaskController
         //init view 
         GameObject view = GameObject.Find("ModePanel");
         m_view = view.AddComponent<Modelisation_View>();
-        m_view.onSelectSoftware += HandleStartSoftware;
+       // m_view.onSelectSoftware += HandleStartSoftware;
         m_view.onCreateSubtask += HandleCreateSubtask;
-
+        m_view.onRemoveSubtask += HandleRemoveSubtask;
         m_model = new ModelisationTask_Model(_assetManager, m_taskName);
+        //m_model.onLoadSubtask += m_view.HandleLoadSubtask;//HandleSubtask;
         Debug.Log("Init mode panel");
     }
     
@@ -36,14 +37,51 @@ public class ModelisationTask: TaskController
     }
 
     //handlers
-    private void HandleStartSoftware(object _sender, StartSoftwareEvent _args)
+   /* private void HandleStartSoftware(object _sender, StartSoftwareEvent _args)
     {
         m_model.OpenAsset(_args.SoftwareName);
-    }
+    }*/
 
     private void HandleCreateSubtask(object _sender, CreateSubtaskEvent _args)
     {
         m_model.CreateSubtask(_args.SubtaskName,_args.SoftwareIndex, _args.PanelID, _args.ViewPart);
+    }
+
+    public void HandleRemoveSubtask(object _sender, RemoveSubtaskEvent _args) //called when removing a subtask button panel, remove the associated subtask
+    {
+        m_model.RemoveSubtask(_args.IdButton); //remove the button by its ID
+    }
+
+    /*public void HandleSubtask(object _sender, LoadSubtaskEvent _eventArgs)
+    {
+        on
+    }*/
+
+    public override SavedState Serialize()
+    {
+        Debug.Log("save modelisation task");
+        return m_model.SaveState();  
+
+    }
+    public override void Deserialize(SavedState _savedState)
+    {
+        base.Deserialize(_savedState);
+        CleanDatas();
+        TaskModelState state = ((TaskModelState)_savedState);
+        SubtaskState subtask;
+        for (int i = 0; i < state.SubtasksDatas.Length; i++)
+        {
+            subtask = ((SubtaskState)state.SubtasksDatas[i]);
+            m_view.LoadSubtask(subtask.Name, subtask.Software);
+            //onLoadSubtask(this, new LoadSubtaskEvent(subtask)); //send the subtask datas to the view part to update it
+        }
+        m_model.Load(state);
+    }
+
+    private void CleanDatas()
+    {
+        m_view.Clean();
+        m_model.Clean();
     }
 }
 
@@ -52,6 +90,10 @@ public interface IModelisation_View : ITask_View
     //events
     event EventHandler<StartSoftwareEvent> onSelectSoftware;
     event EventHandler<CreateSubtaskEvent> onCreateSubtask;
+    event EventHandler<RemoveSubtaskEvent> onRemoveSubtask;
+
+    int LoadSubtask(string _subtaskName, string _softwwareName);
+    void Clean();
 }
 
 public class CreateSubtaskEvent
@@ -69,6 +111,14 @@ public class CreateSubtaskEvent
     }
 }
 
+public class RemoveSubtaskEvent : EventArgs
+{
+    public int IdButton;
+    public RemoveSubtaskEvent(int _id)
+    {
+        IdButton = _id;
+    }
+}
 public class StartSoftwareEvent : EventArgs
 {
     public string SoftwareName { get; private set; }

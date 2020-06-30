@@ -81,7 +81,7 @@ public class Concept_View : Task_View, IConcept_View
     private void FilePathHandler(string _path)
     {
         Debug.Log("test delegate : path = " + _path);
-        if (_path != null && (_path.Contains(".png")|| _path.Contains(".jpg")|| _path.Contains(".jpeg")))
+        if (_path.ToLower() != null && (_path.Contains(".png")|| _path.Contains(".jpg")|| _path.Contains(".jpeg")))
         {
             StartCoroutine(GetTextureFromPath(_path));
         }

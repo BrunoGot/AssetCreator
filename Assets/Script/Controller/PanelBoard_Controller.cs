@@ -66,6 +66,15 @@ public class PanelBoard_Controller
         m_view.RemovePanel(m_panels[_panelID]);
     }
 
+    public void RemoveAll()
+    {
+        for(int i=0; i < m_panels.Count; i++)
+        {
+            removePanelEvent(this, new MainButtonEvent(i));
+            RemovePanel(i);
+        }
+    }
+
     public int CreateNewPanel()//used to create a new panel from the system 
     {
         int id = m_panels.Count;

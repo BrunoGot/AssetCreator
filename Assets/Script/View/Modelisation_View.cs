@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.ComTypes;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,6 +18,7 @@ public class Modelisation_View : Task_View , IModelisation_View
     //events
     public event EventHandler<StartSoftwareEvent> onSelectSoftware;
     public event EventHandler<CreateSubtaskEvent> onCreateSubtask;
+    public event EventHandler<RemoveSubtaskEvent> onRemoveSubtask;
 
     // Start is called before the first frame update
     void Start()
@@ -41,7 +43,7 @@ public class Modelisation_View : Task_View , IModelisation_View
         m_panelBoard = new PanelBoard_Controller(panelboard);
         m_panelBoard.addPanelEvent += HandleAddSubtask;
         m_panelBoard.onMainButtonEvent += HandleSelectSubtask;
-        m_panelBoard.removePanelEvent += HandleRemoveSoftware;
+        m_panelBoard.removePanelEvent += HandleRemoveSubtask;
 
         InitSubtaskForm();
         DisplaySubtaskForm(false);
@@ -142,10 +144,29 @@ public class Modelisation_View : Task_View , IModelisation_View
     }
     private void HandleSelectSubtask(object _sender, MainButtonEvent _args)
     {
-        Debug.Log("Add panel : " + _args.ButtonId);
+        Debug.Log("select panel : " + _args.ButtonId);
     }
-    private void HandleRemoveSoftware(object _sender, MainButtonEvent _args)
+    private void HandleRemoveSubtask(object _sender, MainButtonEvent _args)
     {
-        Debug.Log("Add panel : " + _args.ButtonId);
+        Debug.Log("remove panel : " + _args.ButtonId);
+        onRemoveSubtask(this, new RemoveSubtaskEvent(_args.ButtonId));
+    }
+
+    public int LoadSubtask(string _subtaskName, string _softwareName)
+    {
+        Debug.Log("load subtask");
+        m_lastPanel = m_panelBoard.CreateNewPanel();
+        //convert softwareName to software index with the dropdown
+        Debug.Log("subtask name = " + _subtaskName);
+        Debug.Log("Software name = " + _softwareName);
+
+        int indexSoftware = AssetSystem.System.GetSoftwareList(TaskName.Modelisation).IndexOf(_softwareName);
+        InitSubtaskGUI(_subtaskName, indexSoftware);
+        return m_lastPanel; //return the index of the assigned panel
+    }
+
+    public void Clean()
+    {
+        m_panelBoard.RemoveAll();
     }
 }

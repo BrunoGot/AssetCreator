@@ -92,9 +92,11 @@ public class ConceptTask : TaskController
             index++;
         }
         Debug.Log("Saving concept");
-        MementoHandler m = new MementoHandler(); //using memento pattern to handle saving/loading and also undo/redo in the future
-        m.SetState(imgPaths, m_state); //will move when a new concept is added, to handle undo/redo functionality
-        return m.GetState() as SavedState;
+        MementoHandler m = new MementoHandler(); //using memento pattern to handle saving/loading and also undo/redo in the 
+        ConceptState cs = new ConceptState(imgPaths, m_state);
+
+        m.SetState(cs); //will move when a new concept is added, to handle undo/redo functionality
+        return m.GetState();
 /*        IFormatter formatter = new BinaryFormatter();
         Stream stream = new FileStream("C:\\Users\\Natspir\\NatspirProd\\Test.assetProd", FileMode.Create, FileAccess.Write);
         formatter.Serialize(stream, m.GetState());
@@ -123,55 +125,7 @@ public class ConceptTask : TaskController
     }
 }
 
-public class MementoHandler
-{
-    CareTaker m_carTaker;
-    Originator m_originator;
-    
-    public MementoHandler()
-    {
-        m_carTaker = new CareTaker();
-        m_originator = new Originator();
-    }
 
-    public void SetState(string[] _imgList, TaskState _stateTask)
-    { 
-        m_originator.SetState(new ConceptState(_imgList, _stateTask));
-        m_carTaker.Add(m_originator.SaveToMemento());
-    }
-
-    public ConceptState GetState()
-    {
-        m_originator.RestoreToMemento(m_carTaker.Get(1));
-        return m_originator.GetState();
-    }
-}
-
-public class Originator
-{
-    private ConceptState m_state;
-
-    public void SetState(ConceptState _state)
-    {
-        m_state = _state;
-    }
-
-    public ConceptState GetState()
-    {
-        return m_state;
-    }
-
-    public Memento SaveToMemento()
-    {
-        Debug.Log("Originator : sauvegardé dans le mémento.");
-        return new Memento(m_state);
-    }
-
-    public void RestoreToMemento(Memento _m)
-    {
-        m_state = _m.GetSavedState();
-    }
-}
 
 [Serializable]
 public class ConceptState : SavedState
@@ -185,38 +139,5 @@ public class ConceptState : SavedState
     }
 }
 
-public class Memento
-{
 
-
-    private ConceptState m_state;
-    public Memento(ConceptState _state)
-    {
-        m_state = _state;
-    }
-
-    public ConceptState GetSavedState()
-    {
-        return m_state;
-    }
-
-}
-
-public class CareTaker
-{
-    private List<Memento> m_mementos;
-    public CareTaker()
-    {
-        m_mementos = new List<Memento>();
-    }
-
-    public void Add(Memento _m)
-    {
-        m_mementos.Add(_m);
-    }
-    public Memento Get(int _index)
-    {
-        return m_mementos[_index% m_mementos.Count];
-    }
-}
 
