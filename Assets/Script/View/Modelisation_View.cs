@@ -5,18 +5,22 @@ using System.Runtime.InteropServices.ComTypes;
 using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.XR.WSA.Input;
 
 public class Modelisation_View : Task_View , IModelisation_View
 {
 
     //gui
     private PanelBoard_Controller m_panelBoard; //use it to handle custom subtasks
+    private Color m_selectedColorPanel; //color to switch when a panel is selected
 
     //buffers
     private int m_lastPanel; //buffer saving the last subtask panel created
+    private GameObject m_selectedPanel; //saving the curret selected subtask 
+    private Color m_normalPanelColor; //saving the normal button panel color
 
     //events
-    public event EventHandler<StartSoftwareEvent> onSelectSoftware;
+    public event EventHandler<SelectSubtaskEvent> onSelectSubtask;
     public event EventHandler<CreateSubtaskEvent> onCreateSubtask;
     public event EventHandler<RemoveSubtaskEvent> onRemoveSubtask;
 
@@ -36,7 +40,6 @@ public class Modelisation_View : Task_View , IModelisation_View
     {
         base.InitGUI();
 
-        
          // Desactivated temporarly because it's not a major functionality
         IPanelBoardView panelboard = GameObject.Find("ModePanelBoard").AddComponent<PanelBoard_View>();
         panelboard.Init("GUI/ButtonPanelSubtask");
@@ -52,7 +55,7 @@ public class Modelisation_View : Task_View , IModelisation_View
         blenderButton.onClick.AddListener(OpenBlender);
         Button houdiniButton = GameObject.Find("ButtonPanelHoudini").transform.Find("MainButton").GetComponent<Button>();
         houdiniButton.onClick.AddListener(OpenHoudini);*/
-
+        m_selectedColorPanel = new Color(0.5707547f, 0.5707547f, 1f);
     }
 
     private void InitSubtaskForm()
@@ -86,6 +89,7 @@ public class Modelisation_View : Task_View , IModelisation_View
         //string subTaskName = infield.text;
         Dropdown dpDown = panelButton.Find("DropdownSoftware").GetComponent<Dropdown>();
         int index = dpDown.value;
+        Debug.Log("Index software = " + index);
         ColorBlock cols = infield.colors;
         bool errors = false;
         if (infield.text.Length == 0)
@@ -114,18 +118,6 @@ public class Modelisation_View : Task_View , IModelisation_View
         m_panelBoard.RemovePanel(m_lastPanel);
         DisplaySubtaskForm(false);
     }
-    //temporary
-    private void OpenBlender()
-    {
-        Debug.Log("try to open blender");
-        onSelectSoftware(this, new StartSoftwareEvent("blender"));
-    }
-
-    private void OpenHoudini()
-    {
-        onSelectSoftware(this, new StartSoftwareEvent("houdini"));
-
-    }
 
     private void InitSubtaskGUI(string _subtaskName, int _indexSoftware)
     {
@@ -145,11 +137,25 @@ public class Modelisation_View : Task_View , IModelisation_View
     private void HandleSelectSubtask(object _sender, MainButtonEvent _args)
     {
         Debug.Log("select panel : " + _args.ButtonId);
+        if(m_selectedPanel != null)
+        {
+            Release(m_selectedPanel);
+        }
+        m_selectedPanel = m_panelBoard.GetPanel(_args.ButtonId);
+        Debug.Log("selectedPanel = " + m_selectedPanel);
+        m_selectedPanel.GetComponent<Image>().color = m_selectedColorPanel;
+        onSelectSubtask(this, new SelectSubtaskEvent(_args.ButtonId)) ;
+        
     }
     private void HandleRemoveSubtask(object _sender, MainButtonEvent _args)
     {
         Debug.Log("remove panel : " + _args.ButtonId);
         onRemoveSubtask(this, new RemoveSubtaskEvent(_args.ButtonId));
+    }
+
+    private void Release(GameObject _panelButton)
+    {
+        _panelButton .GetComponent<Image>().color = m_normalPanelColor;
     }
 
     public int LoadSubtask(string _subtaskName, string _softwareName)
@@ -161,6 +167,7 @@ public class Modelisation_View : Task_View , IModelisation_View
         Debug.Log("Software name = " + _softwareName);
 
         int indexSoftware = AssetSystem.System.GetSoftwareList(TaskName.Modelisation).IndexOf(_softwareName);
+        Debug.Log("Loading : indexSoftware = " + indexSoftware);
         InitSubtaskGUI(_subtaskName, indexSoftware);
         return m_lastPanel; //return the index of the assigned panel
     }
@@ -169,4 +176,9 @@ public class Modelisation_View : Task_View , IModelisation_View
     {
         m_panelBoard.RemoveAll();
     }
+    /*moving to subtask View
+    public void DisplaySubtask(string comments, string _software)//load the subtask information from the model part and displays them on the GUI
+    {
+        //m_
+    }*/
 }

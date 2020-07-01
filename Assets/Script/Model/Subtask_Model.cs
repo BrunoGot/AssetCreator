@@ -20,7 +20,7 @@ public class Subtask_Model: TaskModel
     public Subtask_Model(AssetManagerModel _assetManager, TaskName _taskName, string _name, int _softwareIndex) : base(_assetManager, _taskName)
     {
         m_name = _name;
-        Debug.Log("_softwareIndex = "+ _softwareIndex);
+        Debug.Log("_softwareIndex = "+ _softwareIndex+" Taskname = "+_taskName);
         m_software = AssetSystem.System.GetSoftwareList(m_taskName)[_softwareIndex];
         //Debug.Log("Create a subtask");
         m_mementoHandler = new MementoHandler(); //using memento pattern to handle saving/loading and also undo/redo in the 

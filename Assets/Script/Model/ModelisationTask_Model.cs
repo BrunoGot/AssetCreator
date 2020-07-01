@@ -16,9 +16,6 @@ public class ModelisationTask_Model:TaskModel
 
     public ModelisationTask_Model(AssetManagerModel _assetModel, TaskName _taskName) : base(_assetModel, _taskName)
     {
-
-
-        
         m_Subtasks = new Dictionary<int, Subtask_Controller>();
 
     }
@@ -46,6 +43,11 @@ public class ModelisationTask_Model:TaskModel
         Subtask_Model subTaskModel = new Subtask_Model(m_assetManager,m_taskName, _subtaskName, _softwareIndex);
         Subtask_Controller subTask = new Subtask_Controller(viewPart, subTaskModel);
         m_Subtasks[_panelID] = subTask;
+    }
+
+    public void SelectSubtask(int _id)
+    {
+        m_Subtasks[_id].Display();
     }
 
     public override SavedState SaveState()

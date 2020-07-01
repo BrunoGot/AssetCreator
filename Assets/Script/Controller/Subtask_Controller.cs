@@ -32,6 +32,11 @@ public class Subtask_Controller:TaskController
     {
         m_model.OpenAsset();
     }
+
+    public void Display()
+    {
+        m_view.Init(m_model.Software, m_model.Versions, m_model.CurrentVersion);
+    }
 }
 
 public interface ISubtask_View

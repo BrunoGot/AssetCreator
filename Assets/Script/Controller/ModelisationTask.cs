@@ -16,9 +16,10 @@ public class ModelisationTask: TaskController
         //init view 
         GameObject view = GameObject.Find("ModePanel");
         m_view = view.AddComponent<Modelisation_View>();
-       // m_view.onSelectSoftware += HandleStartSoftware;
+       //Connect to the view part, will maybe move to the parent class
         m_view.onCreateSubtask += HandleCreateSubtask;
         m_view.onRemoveSubtask += HandleRemoveSubtask;
+        m_view.onSelectSubtask += HandleSelectSubtask;
         m_model = new ModelisationTask_Model(_assetManager, m_taskName);
         //m_model.onLoadSubtask += m_view.HandleLoadSubtask;//HandleSubtask;
         Debug.Log("Init mode panel");
@@ -52,10 +53,10 @@ public class ModelisationTask: TaskController
         m_model.RemoveSubtask(_args.IdButton); //remove the button by its ID
     }
 
-    /*public void HandleSubtask(object _sender, LoadSubtaskEvent _eventArgs)
+    public void HandleSelectSubtask(object _sender, SelectSubtaskEvent  _args)
     {
-        on
-    }*/
+        m_model.SelectSubtask(_args.ID);
+    }
 
     public override SavedState Serialize()
     {
@@ -88,7 +89,7 @@ public class ModelisationTask: TaskController
 public interface IModelisation_View : ITask_View
 {
     //events
-    event EventHandler<StartSoftwareEvent> onSelectSoftware;
+    event EventHandler<SelectSubtaskEvent > onSelectSubtask;
     event EventHandler<CreateSubtaskEvent> onCreateSubtask;
     event EventHandler<RemoveSubtaskEvent> onRemoveSubtask;
 
@@ -119,13 +120,13 @@ public class RemoveSubtaskEvent : EventArgs
         IdButton = _id;
     }
 }
-public class StartSoftwareEvent : EventArgs
+public class SelectSubtaskEvent : EventArgs
 {
-    public string SoftwareName { get; private set; }
+    public int ID { get; private set; }
 
-    public StartSoftwareEvent(string _softName)
+    public SelectSubtaskEvent(int _id)
     {
-        SoftwareName = _softName;
+        ID = _id;
     }
 }
 
