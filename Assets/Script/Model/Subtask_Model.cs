@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class Subtask_Model: TaskModel
@@ -8,13 +9,13 @@ public class Subtask_Model: TaskModel
     private string m_path;
     private string m_name;
     private string m_software;
-    private List<int> m_versions;
+    private List<string> m_versions;
     private string m_commentaire;
     private string m_todo;
     private string m_retakes;
     private MementoHandler m_mementoHandler;
     public string Software { get { return m_software; } }
-    public List<int> Versions { get { return m_versions; } }
+    public List<string> Versions { get { return m_versions; } }
     public int CurrentVersion { get { return m_currentVersion; } }
 
     public Subtask_Model(AssetManagerModel _assetManager, TaskName _taskName, string _name, int _softwareIndex) : base(_assetManager, _taskName)
@@ -25,13 +26,16 @@ public class Subtask_Model: TaskModel
         //Debug.Log("Create a subtask");
         m_mementoHandler = new MementoHandler(); //using memento pattern to handle saving/loading and also undo/redo in the 
 
+        PipelineSystem.System.CreateSubtask(m_taskName, m_name); //create the directory if not exist
+
         //todo : m_versions = pipelineSystem.GetVersions(subtaskName, TaskName) 
-        m_versions = new List<int>();
+        m_versions = PipelineSystem.System.GetVersionList(m_name, m_taskName);
+
     }
 
     public override SavedState SaveState()
     {
-        int[] versions = new int[m_versions.Count];
+        string[] versions = new string[m_versions.Count];
         for(int i =0; i<m_versions.Count; i++)
         {
             versions[i] = m_versions[i];
@@ -46,17 +50,18 @@ public class Subtask_Model: TaskModel
         string extension = PipelineSystem.System.GetExtension(m_software);
         string taskPath = PipelineSystem.System.GetPathTask(m_taskName);
         string versionPath = PipelineSystem.System.GetVersionPath(m_currentVersion);
+
         Debug.Log("m_assetManager.AssetName = " + m_assetManager.AssetName);
         Debug.Log("m_assetManager.AssetPipelineFolder = " + m_assetManager.AssetPath);
         Debug.Log("task path = " + taskPath);
         Debug.Log("software extention = " + extension);
         Debug.Log("asset version = " + m_currentVersion + " path = "+versionPath);
-        string finalPath = m_assetManager.AssetPath + taskPath + "\\" + versionPath + "\\" + m_assetManager.AssetName + extension;
+        string finalPath = "C:\\Program Files\\Blender Foundation\\Blender 2.83\\blender.exe";// m_assetManager.AssetPath + taskPath + "\\" + versionPath + "\\" + m_assetManager.AssetName + extension;
         Debug.Log("finalPath  = " + finalPath);
-        Debug.Log("hard path = C:\\Users\\Natspir\\NatspirProd\\03_WORK_PIPE\\01_ASSET_3D\\Enviro\\DataTunnel\\3d\\scenes\\Mode\\mode\\work_v002\\untitled.blend");
+        Debug.Log("hard path = C:\\Program Files\\Blender Foundation\\Blender 2.83\\blender.exe");// C:\\Users\\Natspir\\NatspirProd\\03_WORK_PIPE\\01_ASSET_3D\\Enviro\\DataTunnel\\3d\\scenes\\Mode\\mode\\work_v002\\untitled.blend");
         System.Diagnostics.Process cmd = new System.Diagnostics.Process();
-        cmd.StartInfo.FileName = "cmd.exe";
-        cmd.StartInfo.Arguments = "/C " + finalPath; //TODO : use asset path + add the task path + add the version path + open it in the software. If there is no file for the software trig a message to open in other soft or import from the file as obj
+        cmd.StartInfo.FileName = finalPath;// "cmd.exe";
+        //cmd.StartInfo.Arguments = "/C " + finalPath; //TODO : use asset path + add the task path + add the version path + open it in the software. If there is no file for the software trig a message to open in other soft or import from the file as obj
         cmd.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
         cmd.StartInfo.CreateNoWindow = true;
         cmd.Start();
@@ -79,12 +84,12 @@ public class SubtaskState:SavedState
     public string Name;
     public string Software;
     public int CurrentVersion;
-    public int[] Versions;
+    public string[] Versions;
     public string Comment;
     public string Todo;
     public string Retakes;
 
-    public SubtaskState(string _path, string _name, string _software, int _currentVersion, int[] _versions, string _comment, string _todo, string _retakes)
+    public SubtaskState(string _path, string _name, string _software, int _currentVersion, string[] _versions, string _comment, string _todo, string _retakes)
     {
         Path = _path;
         Name = _name;

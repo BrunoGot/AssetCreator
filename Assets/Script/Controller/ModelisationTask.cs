@@ -20,6 +20,7 @@ public class ModelisationTask: TaskController
         m_view.onCreateSubtask += HandleCreateSubtask;
         m_view.onRemoveSubtask += HandleRemoveSubtask;
         m_view.onSelectSubtask += HandleSelectSubtask;
+        m_view.onOpenSoftware += HandleOpenSoftware;
         m_model = new ModelisationTask_Model(_assetManager, m_taskName);
         //m_model.onLoadSubtask += m_view.HandleLoadSubtask;//HandleSubtask;
         Debug.Log("Init mode panel");
@@ -48,6 +49,10 @@ public class ModelisationTask: TaskController
         m_model.CreateSubtask(_args.SubtaskName,_args.SoftwareIndex, _args.PanelID, _args.ViewPart);
     }
 
+    public void HandleOpenSoftware(object _sender, EventArgs _args)
+    {
+        m_model.OpenAsset();
+    }
     public void HandleRemoveSubtask(object _sender, RemoveSubtaskEvent _args) //called when removing a subtask button panel, remove the associated subtask
     {
         m_model.RemoveSubtask(_args.IdButton); //remove the button by its ID
@@ -92,6 +97,7 @@ public interface IModelisation_View : ITask_View
     event EventHandler<SelectSubtaskEvent > onSelectSubtask;
     event EventHandler<CreateSubtaskEvent> onCreateSubtask;
     event EventHandler<RemoveSubtaskEvent> onRemoveSubtask;
+    event EventHandler<EventArgs> onOpenSoftware;
 
     int LoadSubtask(string _subtaskName, string _softwwareName);
     void Clean();

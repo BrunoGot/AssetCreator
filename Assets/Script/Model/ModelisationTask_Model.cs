@@ -11,7 +11,7 @@ using UnityEngine;
 public class ModelisationTask_Model:TaskModel
 {
     private Dictionary<int, Subtask_Controller> m_Subtasks; //dictionary of the subtask linked to their button id
-
+    int m_currentSubtask;
     //public event EventHandler<LoadSubtaskEvent> onLoadSubtask;
 
     public ModelisationTask_Model(AssetManagerModel _assetModel, TaskName _taskName) : base(_assetModel, _taskName)
@@ -47,7 +47,13 @@ public class ModelisationTask_Model:TaskModel
 
     public void SelectSubtask(int _id)
     {
-        m_Subtasks[_id].Display();
+        m_currentSubtask = _id;
+        m_Subtasks[m_currentSubtask].Display();
+    }
+
+    public void OpenAsset()
+    {
+        m_Subtasks[m_currentSubtask].OpenAsset();
     }
 
     public override SavedState SaveState()

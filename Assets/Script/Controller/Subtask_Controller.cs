@@ -12,7 +12,6 @@ public class Subtask_Controller:TaskController
     {
         m_model = _model;
         m_view = _view;
-        m_view.onOpenSoftware += OpenSoftwareHandler;
         m_view.Init(m_model.Software, m_model.Versions, m_model.CurrentVersion);
     }
 
@@ -28,22 +27,28 @@ public class Subtask_Controller:TaskController
         m_view = null;
     }
 
-    private void OpenSoftwareHandler(object _sender, EventArgs _args)
+    /*private void OpenSoftwareHandler(object _sender, EventArgs _args)
     {
-        m_model.OpenAsset();
-    }
+        //m_model.OpenAsset();
+    }*/
 
     public void Display()
     {
         m_view.Init(m_model.Software, m_model.Versions, m_model.CurrentVersion);
+    }
+
+    public void OpenAsset()
+    {
+        Debug.Log("openAsset");
+        m_model.OpenAsset();
     }
 }
 
 public interface ISubtask_View
 {
     //events
-    event EventHandler<EventArgs> onOpenSoftware;
+    //event EventHandler<EventArgs> onOpenSoftware;
 
-    void Init(string _software, List<int> _versions, int _currentVersion);
+    void Init(string _software, List<string> _versions, int _currentVersion);
     void Clean();
 }

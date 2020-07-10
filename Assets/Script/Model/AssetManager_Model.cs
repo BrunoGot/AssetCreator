@@ -41,7 +41,7 @@ public class AssetManagerModel
         m_tasks.Add(TaskName.LookDev, new UVTask(TaskState.Todo, new TaskName[] {})); //replace with new LookDev Task
         foreach(ITasksController task in m_tasks.Values)
         {
-            Debug.Log("Init taskEvent");
+            //Debug.Log("Init taskEvent");
             task.updateTaskEvent += UpdateTaskHandler;
         }
     }
@@ -72,6 +72,7 @@ public class AssetManagerModel
         //Load the content of the asset from the saved file if exist
         if (File.Exists(m_assetSavedFile))
         {
+            PipelineSystem.System.SetAssetPath(_path);//define the path of the current working asset in the pipeline
             Load();
         }
         foreach (string path in pathsDir)

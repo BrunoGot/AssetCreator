@@ -10,6 +10,9 @@ using UnityEngine.XR.WSA.Input;
 public class Modelisation_View : Task_View , IModelisation_View
 {
 
+    //events
+    public event EventHandler<EventArgs> onOpenSoftware;
+
     //gui
     private PanelBoard_Controller m_panelBoard; //use it to handle custom subtasks
     private Color m_selectedColorPanel; //color to switch when a panel is selected
@@ -47,6 +50,8 @@ public class Modelisation_View : Task_View , IModelisation_View
         m_panelBoard.addPanelEvent += HandleAddSubtask;
         m_panelBoard.onMainButtonEvent += HandleSelectSubtask;
         m_panelBoard.removePanelEvent += HandleRemoveSubtask;
+        Button openSoftButton = GameObject.Find("SubtaskGUI").transform.Find("OpenSoft_Button").GetComponent<Button>();
+        openSoftButton.onClick.AddListener(OpenSoftware);
 
         InitSubtaskForm();
         DisplaySubtaskForm(false);
@@ -175,6 +180,11 @@ public class Modelisation_View : Task_View , IModelisation_View
     public void Clean()
     {
         m_panelBoard.RemoveAll();
+    }
+
+    private void OpenSoftware()
+    {
+        onOpenSoftware(this, new EventArgs());
     }
     /*moving to subtask View
     public void DisplaySubtask(string comments, string _software)//load the subtask information from the model part and displays them on the GUI
