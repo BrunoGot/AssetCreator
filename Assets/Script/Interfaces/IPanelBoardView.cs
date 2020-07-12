@@ -13,7 +13,7 @@ public class AddPanelEvent : EventArgs
 
 }
 
-public class MainButtonEvent : EventArgs
+public class MainButtonEvent : AddPanelEvent
 {
     public int ButtonId { get; private set; }
     public MainButtonEvent(int _buttonId)

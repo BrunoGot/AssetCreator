@@ -174,6 +174,7 @@ public class Modelisation_View : Task_View , IModelisation_View
         int indexSoftware = AssetSystem.System.GetSoftwareList(TaskName.Modelisation).IndexOf(_softwareName);
         Debug.Log("Loading : indexSoftware = " + indexSoftware);
         InitSubtaskGUI(_subtaskName, indexSoftware);
+        HandleSelectSubtask(this, new MainButtonEvent(m_lastPanel)); //select the last subtask loaded
         return m_lastPanel; //return the index of the assigned panel
     }
 

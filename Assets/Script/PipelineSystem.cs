@@ -1,16 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.WSA;
 
 //todo : 
-//check if version exist in subtask
-//if yes => load it in the drop down.
-//if not check if exist in the assetprod saved file.
-//load it in the drop down and create it on the disk
-//create Version file if not exist in the pipeline
-
+//use a interface system to plug different configuration of pipeline and then adapt it to different studios easily
 public class PipelineSystem
 {
     private Dictionary<string, string> m_softwareExtensions; //link software name with their extensions
@@ -42,7 +38,7 @@ public class PipelineSystem
         m_mappingTaskPath[TaskName.Modelisation] = "Mode"; //make mapping between some asset preferences and pipeline path location
         
         m_mappingVersionPath = new Dictionary<int, string>();
-        m_mappingVersionPath[1] = "work_v001";
+//        m_mappingVersionPath[1] = "work_v001";
 
 //        m_pipelinePath = "C:\\Users\\Natspir\\NatspirProd\\03_WORK_PIPE";
     }
@@ -97,7 +93,7 @@ public class PipelineSystem
     //todo : make a load function that reading the .assetProd file and rebuild the pipeline asset file. And signal if conflicts are detected
 
     //just read the pipeline and load the different version of the asset
-    public List<string> GetVersionList(string _subtaskName, TaskName _taskName)
+    public List<string> GetVersionList(TaskName _taskName, string _subtaskName)
     {
 
         string path = Path.Combine(GetPathTask(_taskName), _subtaskName);
@@ -106,13 +102,40 @@ public class PipelineSystem
         List<string> listVersions = new List<string>();
         for (int i=0; i < listDir.Length; i++)
         {
-            Debug.Log("folder = " + listDir[i]);
-            string parentFolder = Directory.GetParent(listDir[i]+"\\").Name;
-            Debug.Log("parent folder = " + parentFolder);
-            string version = parentFolder.Split('v')[1];
+            // Debug.Log("folder = " + listDir[i]);
+            string versionFolder = Directory.GetParent(listDir[i]+"\\").Name;
+            // Debug.Log("parent folder = " + versionFolder);
+            string version = versionFolder.Split('v')[1];
+            m_mappingVersionPath[int.Parse(version)] = versionFolder; //revoir la gestion des versions peut etre ne pas y stocker dans un dico(int, string)
+            //Debug.Log("mappingversion[" + int.Parse(version) + "] = " + versionFolder);
             listVersions.Add(version);
         }
         //Debug.Log("Folder list = " + Directory.GetDirectories(path));
         return listVersions;
+    }
+
+    public int CreateVersion(TaskName _taskName, string _subtaskName, int _version)
+    {
+        int version = _version;
+        Debug.Log("count m_mappingVersionPath = " + m_mappingVersionPath.Count);
+        Debug.Log("current version = " + version);
+        int highestVersion = m_mappingVersionPath.Keys.Max();
+        bool succes = int.TryParse(m_mappingVersionPath[highestVersion].Split('v')[1], out version); //un peu degeu, voir si _version ne devrait pas etre un string, au lieu de parser a chaque fois ladepuis le dictionnaire, ce qui peut etre source d'erreur.
+        if (succes)
+        {
+            version += 1; //nom de la version
+            Debug.Log("version = " + version);
+            Debug.Log("_version = " + _version);
+            m_mappingVersionPath[_version] = "work_v" + version.ToString().PadLeft(3,'0');
+            string path = Path.Combine(new string[] { m_assetPath, m_mappingTaskPath[_taskName], _subtaskName, m_mappingVersionPath[_version] });
+            Directory.CreateDirectory(path);
+            Debug.Log("new path = " + path);
+        }
+        else
+        {
+            ModalWindows.ModalWindow.ThrowError("Error : the version has not been created. Probleme parsing previous version name");
+        }
+
+        return version;
     }
 }

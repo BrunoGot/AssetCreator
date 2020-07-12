@@ -14,6 +14,8 @@ public class Subtask_Model: TaskModel
     private string m_todo;
     private string m_retakes;
     private MementoHandler m_mementoHandler;
+
+    public bool IsSelected;
     public string Software { get { return m_software; } }
     public List<string> Versions { get { return m_versions; } }
     public int CurrentVersion { get { return m_currentVersion; } }
@@ -29,7 +31,8 @@ public class Subtask_Model: TaskModel
         PipelineSystem.System.CreateSubtask(m_taskName, m_name); //create the directory if not exist
 
         //todo : m_versions = pipelineSystem.GetVersions(subtaskName, TaskName) 
-        m_versions = PipelineSystem.System.GetVersionList(m_name, m_taskName);
+        m_versions = PipelineSystem.System.GetVersionList(m_taskName, m_name);
+        IsSelected = false;
 
     }
 
@@ -45,6 +48,7 @@ public class Subtask_Model: TaskModel
         m_mementoHandler.SetState(subtask); //will move when a new concept is added, to handle undo/redo functionality
         return m_mementoHandler.GetState();
     }
+
     public void OpenAsset()
     {
         string extension = PipelineSystem.System.GetExtension(m_software);
@@ -75,6 +79,19 @@ public class Subtask_Model: TaskModel
         //load the state of the task
         //HandleUpdateConcept(this, new UpdateStateEvent(conceptState.StateTask));
     }*/
+
+    public void AddNewVersion()
+    {
+        Debug.Log("m_currentVersion  = " + m_currentVersion);
+        m_currentVersion = PipelineSystem.System.CreateVersion(m_taskName, m_name, m_currentVersion);
+        Debug.Log("After add new version : m_currentVersion  = " + m_currentVersion);
+        m_versions = PipelineSystem.System.GetVersionList(m_taskName, m_name);
+    }
+
+    public void SetCurrentVersion(int _version)
+    {
+        m_currentVersion = _version;
+    }
 }
 
 [Serializable]

@@ -43,12 +43,14 @@ public class ModelisationTask_Model:TaskModel
         Subtask_Model subTaskModel = new Subtask_Model(m_assetManager,m_taskName, _subtaskName, _softwareIndex);
         Subtask_Controller subTask = new Subtask_Controller(viewPart, subTaskModel);
         m_Subtasks[_panelID] = subTask;
+        SelectSubtask(_panelID);
     }
 
     public void SelectSubtask(int _id)
     {
+        m_Subtasks[m_currentSubtask].DeSelect();
         m_currentSubtask = _id;
-        m_Subtasks[m_currentSubtask].Display();
+        m_Subtasks[m_currentSubtask].Select();
     }
 
     public void OpenAsset()

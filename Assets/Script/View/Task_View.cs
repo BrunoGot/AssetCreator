@@ -21,6 +21,8 @@ public abstract class Task_View : MonoBehaviour, ITask_View
     protected GameObject m_subtaskForm; //fomr to add subtasks
     //events
     public event EventHandler<UpdateStateEvent> validTaskEvent;
+    public event EventHandler<EventArgs> addNewVersionEvent;
+
 
     public void DisplayPanel(bool _val) //show or hide the concept panel
     {
@@ -42,6 +44,7 @@ public abstract class Task_View : MonoBehaviour, ITask_View
         quitPanel.onClick.AddListener(QuitPanel);
         Button validButton = this.transform.Find("ValidButton").GetComponent<Button>();
         validButton.onClick.AddListener(ValidateStep);
+
     }
 
     public void ValidateStep()
